@@ -1,0 +1,1 @@
+function time_trace = generate_time_trace(frame)
