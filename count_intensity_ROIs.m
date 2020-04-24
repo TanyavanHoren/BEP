@@ -1,4 +1,4 @@
-function intensity_data = count_intensity_ROIs(intensity_data, analysis_data, frame, nanorod_data, pixel_data,n_frame)
+function intensity_data = count_intensity_ROIs(intensity_data, analysis_data, nanorod_data, pixel_data, frame, n_frame)
 
 for i=1:nanorod_data.number %loop over all nanorods, save each independently
     if nanorod_data.nanorod(i).analysis == 0
