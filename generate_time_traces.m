@@ -1,9 +1,10 @@
-function time_traces = generate_time_traces(intensity_data,nanorod_data,analysis_data)
+function time_traces = generate_time_traces(intensity_data,object_data,analysis_data)
 
-for i=1:nanorod_data.number
-    figure(i)
-    time_trace(i)=plot(intensity_data.nanorod(i,1:analysis_data.frames+1)');
+for i=1:object_data.number
+    figure()
+    time_trace(i)=plot(intensity_data.object(i).timetrace(:)');
     title('Intensity time trace')
     xlabel('Frame number') 
     ylabel('Intensity') 
+    ylim([0 inf]);
 end 

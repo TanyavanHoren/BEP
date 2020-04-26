@@ -1,4 +1,4 @@
-function object_data = generate_binding_events(object_data, experiment_data,t) 
+function object_data = generate_binding_events_v2(object_data, experiment_data,t) 
 
 for i=1:object_data.number
     for j=1:object_data.object(i).number_bind
