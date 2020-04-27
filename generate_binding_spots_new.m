@@ -1,4 +1,4 @@
-function object_data = generate_binding_spots_new(object_data, system_choice)
+function object_data = generate_binding_spots_new(object_data, system_choice, experiment_data)
 
 for i=1:object_data.number
     if system_choice == 1
@@ -6,7 +6,8 @@ for i=1:object_data.number
             object_data.object_bindingspots(i).binding_spot(j).position_x=object_data.object(i).position_x;
             object_data.object_bindingspots(i).binding_spot(j).position_y=object_data.object(i).position_y;
             object_data.object_bindingspots(i).binding_spot(j).isBound=0;
-            object_data.object_bindingspots(i).binding_spot(j).time=0;
+            object_data.object_bindingspots(i).binding_spot(j).intensity_factor =0;
+            object_data.object_bindingspots(i).binding_spot(j).t_switch=exprnd(experiment_data.td);
         end
     elseif system_choice == 2
         for j=1:object_data.object(i).number_bind
@@ -17,7 +18,8 @@ for i=1:object_data.number
             object_data.object_bindingspots(i).binding_spot(j).position_x=object_data.object(i).position_x+x;
             object_data.object_bindingspots(i).binding_spot(j).position_y=object_data.object(i).position_y+y;
             object_data.object_bindingspots(i).binding_spot(j).isBound=0;
-            object_data.object_bindingspots(i).binding_spot(j).time=0;
+            object_data.object_bindingspots(i).binding_spot(j).intensity_factor =0;
+            object_data.object_bindingspots(i).binding_spot(j).t_switch=exprnd(experiment_data.td);
         end
     end
 end

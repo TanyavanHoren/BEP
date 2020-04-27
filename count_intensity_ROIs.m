@@ -2,6 +2,7 @@ function intensity_data = count_intensity_ROIs(intensity_data, analysis_data, ob
 
 for i=1:object_data.number %loop over all objects, save each independently
     if object_data.object(i).analysis == 0
+        intensity_data.object(i).timetrace(n_frame) = 0;
         continue
     end
     lower_bound_x = ceil(object_data.object(i).position_x/pixel_data.pixelsize)-(analysis_data.size_ROI-1)/2;
