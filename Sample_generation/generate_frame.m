@@ -1,5 +1,5 @@
-function frame = generate_frame(pixel_data)
-frame = zeros(pixel_data.pixels_x,pixel_data.pixels_y)';
+function frame = generate_frame(set)
+frame = zeros(set.mic.pixels_x,set.mic.pixels_y)';
 end
 
 %Generates a matrix of zeroes with the dimensions of

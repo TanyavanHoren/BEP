@@ -1,13 +1,13 @@
-function frame = generate_specific_binding_intensity(object_data, pixel_data, frame, experiment_data,t,analysis_data)
+function frame = generate_specific_binding_intensity(obj, set, frame)
 
-for i=1:object_data.number
-    for j=1:object_data.object(i).number_bind
-        if object_data.object_bindingspots(i).binding_spot(j).intensity_factor>0
-            yc=object_data.object_bindingspots(i).binding_spot(j).position_x/pixel_data.pixelsize;
-            xc=object_data.object_bindingspots(i).binding_spot(j).position_y/pixel_data.pixelsize;
+for i=1:obj.gen.number
+    for j=1:obj.object(i).number_bind
+        if obj.object(i).site(j).intensity_factor>0
+            yc=obj.object(i).site(j).position_x/set.mic.pixelsize;
+            xc=obj.object(i).site(j).position_y/set.mic.pixelsize;
             center = [xc;yc];
-            gauss_data.I_max=object_data.object_bindingspots(i).binding_spot(j).intensity_factor*poissrnd(2*experiment_data.average_background); %not representative
-            gauss_data.sigma= 5*pixel_data.pixelsize; %not representative
+            gauss_data.I_max=obj.object(i).site(j).intensity_factor*poissrnd(2*set.other.av_background); %not representative
+            gauss_data.sigma= 5*set.mic.pixelsize; %not representative
             gauss_on_frame = generate_frame_with_Gauss(frame, gauss_data, center);
             frame = frame + gauss_on_frame;  
         end

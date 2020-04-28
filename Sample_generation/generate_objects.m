@@ -1,22 +1,16 @@
-function object_data = generate_objects(pixel_data, object_data, analysis_data, system_choice)
+function obj = generate_objects(set, obj)
 
-for i=1:object_data.number
-    if system_choice == 1
-    object_data.object(i).position_x = rand()*pixel_data.pixels_x*pixel_data.pixelsize;
-    object_data.object(i).position_y = rand()*pixel_data.pixels_y*pixel_data.pixelsize;
-    object_data.object(i).number_bind = 1;
-    elseif system_choice == 2
-    object_data.object(i).size_x = (normrnd(object_data.size_x*1000, sqrt(object_data.size_x*1000))/1000);
-    object_data.object(i).size_y = (normrnd(object_data.size_y*1000, sqrt(object_data.size_y*1000))/1000);
-  
-    object_data.object(i).number_bind = poissrnd(object_data.average_binding_spots);
-    object_data.object(i).position_x = rand()*pixel_data.pixels_x*pixel_data.pixelsize;
-    object_data.object(i).position_y = rand()*pixel_data.pixels_y*pixel_data.pixelsize;
-    object_data.object(i).orientation = rand()*pi;
+for i=1:obj.gen.number
+    if set.other.system_choice == 1
+    obj.object(i).position_x = rand()*set.mic.pixels_x*set.mic.pixelsize;
+    obj.object(i).position_y = rand()*set.mic.pixels_y*set.mic.pixelsize;
+    obj.object(i).number_bind = 1;
+    elseif set.other.system_choice == 2
+    obj.object(i).size_x = (normrnd(obj.gen.av_size_x*1000, sqrt(obj.gen.av_size_x*1000))/1000);
+    obj.object(i).size_y = (normrnd(obj.gen.av_size_y*1000, sqrt(obj.gen.av_size_y*1000))/1000);
+    obj.object(i).number_bind = poissrnd(obj.gen.av_binding_spots);
+    obj.object(i).position_x = rand()*set.mic.pixels_x*set.mic.pixelsize;
+    obj.object(i).position_y = rand()*set.mic.pixels_y*set.mic.pixelsize;
+    obj.object(i).orientation = rand()*pi;
     end
-        if object_data.object(i).position_x < (analysis_data.size_ROI-1)/2*pixel_data.pixelsize || object_data.object(i).position_x > (pixel_data.pixels_x -(analysis_data.size_ROI-1)/2)*pixel_data.pixelsize || object_data.object(i).position_y < (analysis_data.size_ROI-1)/2*pixel_data.pixelsize || object_data.object(i).position_y > (pixel_data.pixels_y -(analysis_data.size_ROI-1)/2)*pixel_data.pixelsize 
-        object_data.object(i).analysis = 0;
-        else
-        object_data.object(i).analysis = 1;
-        end
 end 

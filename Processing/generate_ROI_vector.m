@@ -1,13 +1,13 @@
-function ROI_data = generate_ROI_vector(ROI_frame, pixel_data, analysis_data)
+function ana = generate_ROI_vector(ana, set)
 counter = 1;
-for i=((analysis_data.size_ROI-1)/2+1):(pixel_data.pixels_y-(analysis_data.size_ROI-1)/2) 
-    for j=((analysis_data.size_ROI-1)/2+1):(pixel_data.pixels_x-(analysis_data.size_ROI-1)/2)
-       if ROI_frame(i,j) == 1
-           ROI_data.ROI(counter).position_x = j;
-           ROI_data.ROI(counter).position_y = i; 
+for i=((ana.ROI.size-1)/2+1):(set.mic.pixels_y-(ana.ROI.size-1)/2) 
+    for j=((ana.ROI.size-1)/2+1):(set.mic.pixels_x-(ana.ROI.size-1)/2)
+       if ana.ROI.frame(i,j) == 1
+           ana.ROI.ROI(counter).position_x = j;
+           ana.ROI.ROI(counter).position_y = i; 
            counter = counter + 1 ;
        end
     end
 end
-ROI_data.number=sum(ROI_frame(:)==1);
+ana.ROI.number=sum(ana.ROI.frame(:)==1);
     
