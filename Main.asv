@@ -1,8 +1,6 @@
 clear all
 close all
 clc
-folder = fileparts(which('main.m')); 
-addpath(genpath(folder));
 %% System choice
 system_choice = 2;%1: Single tethers, 2: nanorods
 background_mode = 2;%1: background generated per pixel, 2: SNR in timetrace 
@@ -14,8 +12,8 @@ pixel_data.pixelsize = 0.22; %width pixel in micrometers
 object_data.size_x = 0.07; %in mu
 object_data.size_y = 0.02; %in mu
 object_data.number = 1; %total number of objects
-object_data.average_binding_spots = 2; %per plasmonic particle
-object_data.I0 = 100000; %reference intensity plasmonic particle
+object_data.average_binding_spots = 2; %per nanorod
+object_data.I0 = 100000; %reference intensity rods 
 
 experiment_data.concentration = 10E4; %in M
 experiment_data.average_background = 1000;%experiment_data.concentration*9E10;
@@ -27,7 +25,7 @@ experiment_data.td = 1/(experiment_data.k_on*experiment_data.concentration); %s
 analysis_data.size_ROI = 9; %NbyN ROI frame analyzed per object
 analysis_data.time_frame = 1E-3; %in seconds 
 analysis_data.dt = 50E-3;
-analysis_data.frames = 50; %144E3 for a full 2h experiment with 50ms frames
+analysis_data.frames = 5000; %144E3 voor volledig 2u experiment op 50ms frames
 analysis_data.t_end = analysis_data.dt*analysis_data.frames;
 n_frame = 1;
 %% Generate objects
@@ -64,7 +62,7 @@ for t=analysis_data.dt:analysis_data.dt:analysis_data.t_end
     %% frame number
     n_frame = n_frame+1;
 end
-clear frame;
+
 %% Process data 
 %Everything below is data processing
 %% Place ROIs in vector
