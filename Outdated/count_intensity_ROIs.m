@@ -1,14 +1,10 @@
-function intensity_data = count_intensity_ROIs(intensity_data, analysis_data, object_data, pixel_data, frame, n_frame)
+function ana = count_intensity_ROIs(ana, set, frame, n_frame)
 
-for i=1:object_data.number %loop over all objects, save each independently
-    if object_data.object(i).analysis == 0
-        intensity_data.object(i).timetrace(n_frame) = 0;
-        continue
-    end
-    lower_bound_x = ceil(object_data.object(i).position_x/pixel_data.pixelsize)-(analysis_data.size_ROI-1)/2;
-    upper_bound_x = ceil(object_data.object(i).position_x/pixel_data.pixelsize)+(analysis_data.size_ROI-1)/2;
-    lower_bound_y = ceil(object_data.object(i).position_y/pixel_data.pixelsize)-(analysis_data.size_ROI-1)/2;
-    upper_bound_y = ceil(object_data.object(i).position_y/pixel_data.pixelsize)+(analysis_data.size_ROI-1)/2;
+for i=1:ana.ROI.number %loop over all objects, save each independently
+    lower_bound_x = ceil(ana.ROI.ROI(i).position_x/set.mic.pixelsize)-(ana.ROI.size-1)/2;
+    upper_bound_x = ceil(ana.ROI.ROI(i).position_x/set.mic.pixelsize)+(ana.ROI.size-1)/2;
+    lower_bound_y = ceil(ana.ROI.ROI(i).position_y/set.mic.pixelsize)-(ana.ROI.size-1)/2;
+    upper_bound_y = ceil(ana.ROI.ROI(i).position_y/set.mic.pixelsize)+(ana.ROI.size-1)/2;
     A = frame([lower_bound_y:upper_bound_y], [lower_bound_x:upper_bound_x]); %create submatrix A containing the data in the ROI
-    intensity_data.object(i).timetrace(n_frame) = sum(A, 'all'); %sum over all elements of submatrix A
-end  
+    ana.ROI.ROI(i).timetrace(n_frame) = sum(A, 'all'); %sum over all elements of submatrix A
+end
