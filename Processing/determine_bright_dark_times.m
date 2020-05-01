@@ -16,5 +16,5 @@ for i=1:ana.ROI.number %loop over all ROIs
         res.ROI(i).bright_times = number_repititions(2:2:end);
         res.ROI(i).dark_times = number_repititions(1:2:end);
     end
-    res.ROI(i).label=ana.ROI.ROI(i).label;
+    res.ROI(i).label=ana.ROI.ROI(i).label; 
 end
