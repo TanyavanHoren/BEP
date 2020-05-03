@@ -7,13 +7,14 @@ addpath(genpath(folder)); %add folder to path
 try
     rmdir Figures s
 end
+pause(0.1)
 mkdir Figures
 addpath(genpath(folder)); %create empty folder for figures
 
 %% System choice and display
 set.other.system_choice = 1; %1: single tethers, 2: nanorods
 set.other.background_mode = 2; %1: background generated per pixel, 2: background added in timetrace 
-set.other.ROI_mode = 3;%1: nanorod: ROIs based on frame 1, 2: tethers: post-processing, 3: cheat mode: ROIs from known positions
+set.other.ROI_mode = 2;%1: nanorod: ROIs based on frame 1, 2: tethers: post-processing, 3: cheat mode: ROIs from known positions
 if set.other.ROI_mode == 1 %check if compatible
     if set.other.system_choice == 1
         disp('ROI mode not compatible')
@@ -104,10 +105,10 @@ if set.other.ROI_mode == 2
 end
 
 %% General processing
-ana = generate_SNR(ana, set);
+ana = generate_SNR_v2(ana, set);
 ana = generate_cutoff(ana, set);
 if set.other.ROI_mode ~= 3
-    res = find_if_specific(ana, obj);
+    res = find_if_specific(ana, obj,set);
 else
     res = [];
 end
