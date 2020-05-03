@@ -1,7 +1,6 @@
 function set = generate_non_specific_binding_events(set, t)
 
 dt = set.mic.dt;
-
 for i=1:set.non.N
     isBound = set.non.site(i).isBound;
     t_switch = set.non.site(i).t_switch;
@@ -9,12 +8,12 @@ for i=1:set.non.N
     if t>t_switch
         t_lb=t-dt;
         while t>t_switch
-            if isBound==0 %the state WAS 0 (we did not adjust it yet)
-                tau=set.non.site(i).tb;
+            if isBound==0 
+                tau=set.non.site(i).tb; %same as non-specific, but with varying tb/td
             else
                 tau=set.non.site(i).td;
             end
-            t_switch_new = t_switch+exprnd(tau); %find the time of the next switch
+            t_switch_new = t_switch+exprnd(tau); 
             intensity_factor = intensity_factor + (t_switch-t_lb)/dt*isBound;
             isBound = abs(isBound-1);
             t_lb=t_switch;
