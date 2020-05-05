@@ -5,8 +5,10 @@ for i=1:set.non.N
         yc=set.non.site(i).position_x/set.mic.pixelsize;
         xc=set.non.site(i).position_y/set.mic.pixelsize;
         center = [xc;yc];
-        gauss_data.I_max=set.non.site(i).intensity_factor*poissrnd(40*set.other.av_background); 
-        gauss_data.sigma= 5*set.mic.pixelsize; 
+        %gauss_data.I_max=set.non.site(i).intensity_factor*poissrnd(40*set.other.av_background);
+        gauss_data.I_max=round(normrnd(set.non.site(i).intensity_factor*set.non.site(i).I_max, 0.73),0);
+        %gauss_data.sigma= 5*set.mic.pixelsize; 
+        gauss_data.sigma=set.non.site(i).intensity_factor*set.non.site(i).sigma;
         frame = generate_frame_with_Gauss(frame, gauss_data, center);
     end
 end

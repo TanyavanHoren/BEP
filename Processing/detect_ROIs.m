@@ -2,6 +2,8 @@ function ana = detect_ROIs(frame, ana, set)
 
 if set.other.background_mode == 2
     factor = 0; 
+else
+    factor = 1;
 end
    
 for i=((ana.ROI.size-1)/2+1):(set.mic.pixels_y-(ana.ROI.size-1)/2) %ROIs are not detected at edge

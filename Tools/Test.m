@@ -21,3 +21,8 @@
 %    end      
 % end
 
+for i=1:100
+    A(i)=lognrnd(4,0.7);
+end
+
+

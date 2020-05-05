@@ -30,37 +30,45 @@ end
 set.other.visFreq = 10; %once every N frames, visualization is done
 
 %% Read input
-%set=settings; sample, mic=microscope, other, non=non-specific events
+%set=settings; sample, mic=microscope, laser, non=non-specific events, other
 %obj=objects; gen=general, object=object
 %ana=analyisis; ROI, other
 %res=results; ROI
-set.mic.frames = 2000; %#: 144E3 for a full 2h experiment with 50ms frames
+set.mic.frames = 200; %#: 144E3 for a full 2h experiment with 50ms frames
 set.other.av_background = 50; %photons
-set.non.events_per_time = 1; %#_non-specific/s
-obj.gen.number = 5; %# objects
+set.non.events_per_time = 0.1; %#_non-specific/s
+obj.gen.number = 100; %# objects
 obj.gen.av_binding_spots = 5; %# per object
-[set, n_frame, obj, ana, clims]  = give_inputs(set, obj); %other inputs
+set.laser.focus = [0;0]; %[x;y] in mu counted from center 
+set.laser.power = 110; %in mW
+set.laser.width = 200; %FWHM in mu
+[set, n_frame, obj, ana, clims, clims_laser]  = give_inputs(set, obj); %other inputs
+
+%% Predefine
+if set.mic.frames/set.other.visFreq > 100 && set.mic.frames/set.other.visFreq ~= Inf
+    disp('Increase set.other.visFreq');
+    return
+end
+frame_data = [];
+set.laser.laser_frame = generate_laser_profile(set);
+imagesc([1:size(set.laser.laser_frame,2)], [1:size(set.laser.laser_frame,1)], set.laser.laser_frame, clims_laser);
+title(["Laser intensity"])
+pause(0.001)
+set.sample.background_frame = generate_background_frame(set);
+ana.ROI.frame = generate_frame(set); 
+BaseFrame = generate_frame(set);
 
 %% Generate objects
 obj = generate_objects(set, obj);
 obj = generate_binding_spots(obj, set);
 set = generate_non_spec_binding_spots(set);
 
-%% Predefine
-% if set.mic.frames/set.other.visFreq > 100 && set.mic.frames/set.other.visFreq ~= Inf
-%     disp('Increase set.other.visFreq');
-%     return
-% end
-frame_data = [];
-ana.ROI.frame = generate_frame(set); 
-BaseFrame = generate_frame(set);
-
 %% Generate data
 for t = set.mic.dt:set.mic.dt:set.mic.t_end
     frame = BaseFrame;
     %% Background (mode 1) and rest intensity
     if set.other.background_mode == 1
-        frame = generate_background(frame, set);
+        frame = generate_background_new(frame,set);
     end
     frame = generate_rest_intensity(obj, set, frame);
     %% Binding and unbinding 
@@ -98,14 +106,12 @@ for t = set.mic.dt:set.mic.dt:set.mic.t_end
     n_frame = n_frame+1;
 end
 
-%% Place ROIs in a vector and make timetraces (mode 2)
+%% General processing
 if set.other.ROI_mode == 2
     ana = generate_ROI_vector(ana, set);
     ana = count_intensity_ROIs_mode_2(ana, frame_data, set);
 end
-
-%% General processing
-ana = generate_SNR_v2(ana, set);
+ana = generate_SNR(ana, set);
 ana = generate_cutoff(ana, set);
 if set.other.ROI_mode ~= 3
     res = find_if_specific(ana, obj,set);
