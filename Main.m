@@ -13,7 +13,7 @@ addpath(genpath(folder)); %create empty folder for figures
 
 %% System choice and display
 set.other.system_choice = 1; %1: single tethers, 2: nanorods
-set.other.background_mode = 2; %1: background generated per pixel, 2: background added in timetrace 
+set.other.background_mode = 2; %1: background generated per pixel, 2: background added in timetrace
 set.other.ROI_mode = 2;%1: nanorod: ROIs based on frame 1, 2: tethers: post-processing, 3: cheat mode: ROIs from known positions
 if set.other.ROI_mode == 1 %check if compatible
     if set.other.system_choice == 1
@@ -21,7 +21,7 @@ if set.other.ROI_mode == 1 %check if compatible
         return
     end
 end
-if set.other.ROI_mode == 2 %check if compatible 
+if set.other.ROI_mode == 2 %check if compatible
     if set.other.system_choice == 2
         disp('ROI mode not compatible')
         return
@@ -39,10 +39,10 @@ set.other.av_background = 50; %photons
 set.non.events_per_time = 0.1; %#_non-specific/s
 obj.gen.number = 100; %# objects
 obj.gen.av_binding_spots = 5; %# per object
-set.laser.focus = [0;0]; %[x;y] in mu counted from center 
+set.laser.focus = [0;0]; %[x;y] in mu counted from center
 set.laser.power = 110; %in mW
 set.laser.width = 200; %FWHM in mu
-[set, n_frame, obj, ana, clims, clims_laser]  = give_inputs(set, obj); %other inputs
+[set, n_frame, obj, ana]  = give_inputs(set, obj); %other inputs
 
 %% Predefine
 if set.mic.frames/set.other.visFreq > 100 && set.mic.frames/set.other.visFreq ~= Inf
@@ -51,11 +51,11 @@ if set.mic.frames/set.other.visFreq > 100 && set.mic.frames/set.other.visFreq ~=
 end
 frame_data = [];
 set.laser.laser_frame = generate_laser_profile(set);
-imagesc([1:size(set.laser.laser_frame,2)], [1:size(set.laser.laser_frame,1)], set.laser.laser_frame, clims_laser);
+imagesc([1:size(set.laser.laser_frame,2)], [1:size(set.laser.laser_frame,1)], set.laser.laser_frame, set.other.clims_laser);
 title(["Laser intensity"])
 pause(0.001)
 set.sample.background_frame = generate_background_frame(set);
-ana.ROI.frame = generate_frame(set); 
+ana.ROI.frame = generate_frame(set);
 BaseFrame = generate_frame(set);
 
 %% Generate objects
@@ -65,61 +65,23 @@ set = generate_non_spec_binding_spots(set);
 
 %% Generate data
 for t = set.mic.dt:set.mic.dt:set.mic.t_end
-    frame = BaseFrame;
-    %% Background (mode 1) and rest intensity
-    if set.other.background_mode == 1
-        frame = generate_background_new(frame,set);
+    if set.other.ROI_mode == 1
+        [obj, set, ana] = data_generation_mode_1(t, n_frame, set, obj, ana, BaseFrame);
+    elseif set.other.ROI_mode == 2
+        [obj, set, ana, frame_data] = data_generation_mode_2(t, n_frame, set, obj, ana, BaseFrame, frame_data);
+    elseif set.other.ROI_mode == 3
+        [obj, set, ana] = data_generation_mode_3(t, n_frame, set, obj, ana, BaseFrame); 
     end
-    frame = generate_rest_intensity(obj, set, frame);
-    %% Binding and unbinding 
-    obj = generate_binding_events(obj, set, t);
-    frame = generate_specific_binding_intensity(obj, set, frame);
-    set = generate_non_specific_binding_events(set, t);
-    frame = generate_nonspecific_binding_intensity(set, frame);
-    %% Place ROIs in a vector and make timetraces (mode 1 and 3)
-    if set.other.ROI_mode == 3 || set.other.ROI_mode == 1
-        if n_frame == 1
-            if set.other.ROI_mode == 3
-                ana = generate_ROI_vector_mode_3(ana, set, obj); %use known positions
-            else 
-                ana = detect_ROI_cutoff(frame, ana); %determine intensity cutoff 
-                ana = detect_ROIs(frame, ana, set); %find nanorod positions
-                ana = generate_ROI_vector(ana, set);
-            end
-        end
-        ana = count_intensity_ROIs(ana, frame, n_frame); 
-    end
-    %% Find ROIs in frame and save frame for processing (mode 2)
-    if set.other.ROI_mode == 2
-        if n_frame == 1
-            ana = detect_ROI_cutoff(frame, ana); %cutoff based on first frame
-        end
-        ana = detect_ROIs(frame, ana, set);
-        frame_data = save_frames(frame, n_frame, frame_data);
-    end
-    %% Other
-    if mod(n_frame,set.other.visFreq) == 0
-        imagesc([1:size(frame,2)], [1:size(frame,1)], frame, clims);
-        title(["Frame: " num2str(n_frame)])
-        pause(0.001)
-    end
+    
     n_frame = n_frame+1;
 end
 
 %% General processing
 if set.other.ROI_mode == 2
-    ana = generate_ROI_vector(ana, set);
-    ana = count_intensity_ROIs_mode_2(ana, frame_data, set);
+    [ana, res] = processing_ROI_mode_2(ana, set, obj, frame_data);
+elseif set.other.ROI_mode ~= 2
+    [ana, res] = processing_ROI_mode_other(ana, set, obj);
 end
-ana = generate_SNR(ana, set);
-ana = generate_cutoff(ana, set);
-if set.other.ROI_mode ~= 3
-    res = find_if_specific(ana, obj,set);
-else
-    res = [];
-end
-res = determine_bright_dark_times(res, ana, set);
-res = determine_averages_and_binding_spots(ana, res, set);
 
 %% Visualization
 %generate_time_traces(ana);

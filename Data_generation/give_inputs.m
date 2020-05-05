@@ -1,4 +1,4 @@
-function [set, n_frame, obj, ana, clims, clims_laser]  = give_inputs(set, obj)
+function [set, n_frame, obj, ana]  = give_inputs(set, obj)
 
 set.mic.dt = 50E-3;
 set.mic.pixels_x = 1024; %# pixels
@@ -22,8 +22,8 @@ obj.gen.av_I0 = 200; %rest intensity object
 
 ana.ROI.size = 9; %pixelwidth ROI 
 
-clims = [0 2000]; %fix colourscale visualization
-clims_laser = [0 200];
+set.other.clims = [0 2000]; %fix colourscale visualization
+set.other.clims_laser = [0 200];
 
 n_frame = 1; %set counter
 end
