@@ -15,10 +15,12 @@ for i=1:obj.gen.number
                     tau=set.sample.td;
                 end
                 t_switch_new = t_switch+exprnd(tau); %determine new switch time
+                
                 intensity_factor = intensity_factor + (t_switch-t_lb)/dt*isBound; 
                 isBound = abs(isBound-1);
                 t_lb=t_switch;
                 t_switch=t_switch_new;
+                obj.object(i).site(j).I_max=lognrnd(obj.object(i).site(j).I_mean,0.73);
             end
             intensity_factor=intensity_factor+(t-t_lb)/dt*isBound; %determine fraction bound
         else

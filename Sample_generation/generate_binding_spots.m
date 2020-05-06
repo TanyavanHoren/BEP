@@ -7,7 +7,8 @@ for i=1:obj.gen.number
             obj.object(i).site(j).position_y=obj.object(i).position_y; %mu
             obj.object(i).site(j).isBound=0; 
             obj.object(i).site(j).intensity_factor=0;
-            obj.object(i).site(j).I_max=log(set.laser.power*(set.laser.laser_frame(ceil(obj.object(i).site(j).position_y/set.mic.pixelsize),ceil(obj.object(i).site(j).position_x/set.mic.pixelsize))/max(max(set.laser.laser_frame))));%peak intensity Gauss binding event
+            %50 to clearly distinguish for now
+            obj.object(i).site(j).I_mean=8.5;%5*log(set.laser.power*(set.laser.laser_frame(ceil(obj.object(i).site(j).position_y/set.mic.pixelsize),ceil(obj.object(i).site(j).position_x/set.mic.pixelsize))/max(set.laser.laser_frame, [], 'all')));%peak intensity Gauss binding event
             obj.object(i).site(j).sigma=5*set.mic.pixelsize;%random value
             obj.object(i).site(j).t_switch=exprnd(set.sample.td); %s
         end
@@ -21,7 +22,19 @@ for i=1:obj.gen.number
             obj.object(i).site(j).position_y=obj.object(i).position_y+y;
             obj.object(i).site(j).isBound=0;
             obj.object(i).site(j).intensity_factor=0;
-            obj.object(i).site(j).I_max=log(set.laser.power*(set.laser.laser_frame(ceil(obj.object(i).site(j).position_y/set.mic.pixelsize),ceil(obj.object(i).site(j).position_x/set.mic.pixelsize))/max(max(set.laser.laser_frame))));%peak intensity Gauss binding event
+            obj.object(i).site(j).I_mean=8.5; %5*log(set.laser.power*(set.laser.laser_frame(ceil(obj.object(i).site(j).position_y/set.mic.pixelsize),ceil(obj.object(i).site(j).position_x/set.mic.pixelsize))/max(set.laser.laser_frame, [], 'all')));%peak intensity Gauss binding event
+            obj.object(i).site(j).sigma=5*set.mic.pixelsize; %random value
+            obj.object(i).site(j).t_switch=exprnd(set.sample.td); %s
+        end
+    elseif set.other.system_choice ==3 || set.other.system_choice == 4
+        for j=1:obj.object(i).number_bind
+            r=rand()*obj.object(i).radius;
+            theta=rand()*2*pi;
+            obj.object(i).site(j).position_x=obj.object(i).position_x+r*cos(theta);
+            obj.object(i).site(j).position_y=obj.object(i).position_y+r*sin(theta);
+            obj.object(i).site(j).isBound=0;
+            obj.object(i).site(j).intensity_factor=0;
+            obj.object(i).site(j).I_mean=8.5; %5*log(set.laser.power*(set.laser.laser_frame(ceil(obj.object(i).site(j).position_y/set.mic.pixelsize),ceil(obj.object(i).site(j).position_x/set.mic.pixelsize))/max(set.laser.laser_frame, [], 'all')));%peak intensity Gauss binding event
             obj.object(i).site(j).sigma=5*set.mic.pixelsize; %random value
             obj.object(i).site(j).t_switch=exprnd(set.sample.td); %s
         end

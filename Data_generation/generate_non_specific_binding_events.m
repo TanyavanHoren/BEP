@@ -18,6 +18,7 @@ for i=1:set.non.N
             isBound = abs(isBound-1);
             t_lb=t_switch;
             t_switch=t_switch_new;
+            set.non.site(i).I_max=lognrnd(set.non.site(i).I_mean,0.73);
         end
         intensity_factor=intensity_factor+(t-t_lb)/dt*isBound;
     else

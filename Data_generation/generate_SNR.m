@@ -9,8 +9,10 @@ if set.other.background_mode == 2
     background_frame = set.sample.background_frame;
     parfor i=1:ana.ROI.number
         mean_background = background_frame(ana.ROI.ROI(i).position_y, ana.ROI.ROI(i).position_x)
+        mu = ROI_size^2*mean_background;
+        sigma = -11.8+0.031*mu;
         for n_frame =1:max_frame
-            timetrace(i,n_frame)=timetrace(i,n_frame)+normrnd(ROI_size^2*mean_background,(-11.8+0.031*ROI_size^2*mean_background)*ROI_size);
+            timetrace(i,n_frame)=timetrace(i,n_frame)+normrnd(mu, sigma);
         end
     end
     for i=1:ana.ROI.number

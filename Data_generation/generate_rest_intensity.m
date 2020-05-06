@@ -1,7 +1,7 @@
 function frame = generate_rest_intensity(obj, set, frame)
 
 for i=1:obj.gen.number
-    if set.other.system_choice == 1 %not applicable for tethers
+    if set.other.system_choice == 1 || set.other.system_choice == 4%not applicable for tethers
         break
     end
     yc=obj.object(i).position_x/set.mic.pixelsize;
