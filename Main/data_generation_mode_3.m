@@ -6,10 +6,10 @@ if set.other.background_mode == 1
 end
 frame = generate_rest_intensity(obj, set, frame);
 %% Binding and unbinding
-obj = generate_binding_events(obj, set, t);
+obj = generate_binding_events_new(obj, set, t);
 frame = generate_specific_binding_intensity(obj, set, frame);
-set = generate_non_specific_binding_events(set, t);
-frame = generate_nonspecific_binding_intensity(set, frame);
+obj = generate_non_specific_binding_events(obj, set, t);
+frame = generate_nonspecific_binding_intensity(obj, set, frame);
 %% Place ROIs in a vector and make timetraces
 if n_frame == 1
     ana = generate_ROI_vector_mode_3(ana, set, obj); %use known positions

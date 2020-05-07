@@ -1,4 +1,4 @@
-function ana = count_intensity_ROIs(ana, frame, n_frame)
+function ana = count_intensity_ROIs_old(ana, frame, n_frame)
 
 for i=1:ana.ROI.number 
     ana.ROI.ROI(i).lower_bound_x = ana.ROI.ROI(i).position_x-(ana.ROI.size-1)/2;

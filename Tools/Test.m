@@ -1,28 +1,25 @@
-% A = ones(10000,10000);
-% T = 1030;
-% B = zeros(10000,10000);
-% % %strategy 1: 13.581 s
-% % for i = 1:10000
-% %     for j = 1:10000
-% %         if A(i,j)>T
-% %             B(i,j)=1;
-% %         end
-% %     end
-% % end
-% %         
-% % %strategy 2: 1.446 s
-% for i=1:10000
-%    if sum(A(i,:))>100*T;
-%        for j=1:10000
-%            if A(i,j)>T
-%                B(i,j)=1;
-%            end
-%        end
-%    end      
+% % num= ana.ROI.number;
+% temp = zeros(num);
+% bound = zeros(num,4);
+
+% for i=1:num
+%     bound(i,1) = ana.ROI.ROI(i).lower_bound_x;
+%     bound(i,2) =     ana.ROI.ROI(i).upper_bound_x;
+%     bound(i,3) =     ana.ROI.ROI(i).lower_bound_y;
+%     bound(i,4) =     ana.ROI.ROI(i).upper_bound_y;
+% end
+% % 
+% parfor i=1:ana.ROI.number 
+%     A = frame([ana.ROI.ROI(i).lower_bound_y:ana.ROI.ROI(i).upper_bound_y], [ana.ROI.ROI(i).lower_bound_x:ana.ROI.ROI(i).upper_bound_x]); %create submatrix A containing the counts in the ROI
+%     temp(i) = sum(A, 'all'); %sum over all elements of submatrix A
 % end
 
-for i=1:100
-    A(i)=lognrnd(4,0.7);
-end
+% parfor i=1:num 
+%     A = frame([bound(i,3):bound(i,4)], [bound(i,1):bound(i,2)]); %create submatrix A containing the counts in the ROI
+%     temp(i) = sum(A, 'all'); %sum over all elements of submatrix A
+% end
 
+% for i=1:num
+%     ana.ROI.ROI(i).timetrace(n_frame)= temp(i);
+% end
 

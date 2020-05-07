@@ -1,10 +1,10 @@
-function void = generate_time_traces_disc(ana)
+function void = generate_time_traces_disc(ana, set)
 
-for i=1:ana.ROI.number
+parfor i=1:ana.ROI.number
     fig = figure('visible','off');
-    plot(ana.ROI.ROI(i).timetrace_disc(:)');
+    plot([set.mic.dt:set.mic.dt:set.mic.t_end],ana.ROI.ROI(i).timetrace_disc(:)');
     title('Discretized intensity time trace')
-    xlabel('Frame number (-)') 
+    xlabel('Time (s)') 
     ylabel('Bound (1) or unbound (0)') 
     xlim([0 inf]);
     ylim([0 inf]);

@@ -1,6 +1,6 @@
 function bright_dark_histograms = generate_bright_dark_histograms(res, ana)
 
-for i=1:ana.ROI.number
+parfor i=1:ana.ROI.number
     fig = figure('Name','Bright Times', 'visible','off');
     bright_histogram(i)=histogram(res.ROI(i).bright_times(:),20);
     xlabel('Bright time (s)') 

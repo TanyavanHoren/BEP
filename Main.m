@@ -11,8 +11,9 @@ pause(0.1)
 mkdir Figures
 addpath(genpath(folder)); %create empty folder for figures
 
-%% System choice and display
-set.other.system_choice = 4; %1: single tethers, 2: nanorods, 3: spherical cells, 4: spherical plasmonic particles
+%% Modii and display
+tic;
+set.other.system_choice = 1; %1: single tethers, 2: nanorods, 3: spherical cells, 4: spherical plasmonic particles
 set.other.background_mode = 2; %1: background generated per pixel, 2: background added in timetrace
 set.other.ROI_mode = 3;%1: nanorod: ROIs based on frame 1, 2: tethers: post-processing, 3: cheat mode: ROIs from known positions
 if set.other.ROI_mode == 1 %check if compatible
@@ -30,12 +31,12 @@ end
 set.other.visFreq = 100; %once every N frames, visualization is done
 
 %% Read input
-%set=settings; sample, mic=microscope, laser, non=non-specific events, other
-%obj=objects; gen=general, object=object
+%set=settings; sample, mic=microscope, laser, other
+%obj=objects; gen=general, object=object, non=non-specific
 %ana=analyisis; ROI, other
 %res=results; ROI
-set.mic.frames = 20000; %#: 144E3 for a full 2h experiment with 50ms frames
-set.non.events_per_time = 0.001; %#_non-specific/s
+set.mic.frames = 50000; %#: 144E3 for a full 2h experiment with 50ms frames
+obj.non.events_per_time = 0.002; %#_non-specific/s
 obj.gen.number = 10; %# objects
 obj.gen.av_binding_spots = 5; %# per object
 set.laser.focus = [0;0]; %[x;y] in mu counted from center
@@ -44,10 +45,6 @@ set.laser.width = Inf; %FWHM in mu (Inf if homogeneous)
 [set, n_frame, obj, ana]  = give_inputs(set, obj); %other inputs
 
 %% Predefine
-% if set.mic.frames/set.other.visFreq > 100 && set.mic.frames/set.other.visFreq ~= Inf
-%     disp('Increase set.other.visFreq');
-%     return
-% end
 frame_data = [];
 set.laser.laser_frame = generate_laser_profile(set);
 imagesc([1:size(set.laser.laser_frame,2)], [1:size(set.laser.laser_frame,1)], set.laser.laser_frame, set.other.clims_laser);
@@ -57,13 +54,20 @@ set.sample.background_frame = generate_background_frame(set);
 ana.ROI.frame = generate_frame(set);
 BaseFrame = generate_frame(set);
 
+t_end = toc;
+disp("Initialisation done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 %% Generate objects
+tic;
+
 obj = generate_objects(set, obj);
 obj = generate_binding_spots(obj, set);
-set = generate_non_spec_binding_spots(set);
+obj = generate_non_spec_binding_spots(obj, set);
 [obj, set] = shuffle(obj, set);
 
+t_end = toc;
+disp("Generate objects done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 %% Generate data
+tic;
 for t = set.mic.dt:set.mic.dt:set.mic.t_end
     if set.other.ROI_mode == 1
         [obj, set, ana] = data_generation_mode_1(t, n_frame, set, obj, ana, BaseFrame);
@@ -75,15 +79,25 @@ for t = set.mic.dt:set.mic.dt:set.mic.t_end
     n_frame = n_frame+1;
 end
 
+t_end = toc;
+disp("Generate data done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 %% General processing
+tic;
 if set.other.ROI_mode == 2
     [ana, res] = processing_ROI_mode_2(ana, set, obj, frame_data);
 elseif set.other.ROI_mode ~= 2
     [ana, res] = processing_ROI_mode_other(ana, set, obj);
 end
 
+t_end = toc;
+disp("General processing" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 %% Visualization
-generate_time_traces(ana);
-%generate_time_traces_disc(ana);
+tic
+
+generate_time_traces(ana, set);
+generate_time_traces_disc(ana, set);
 generate_bright_dark_histograms(res, ana)
 generate_av_tau_plot(ana, res);
+
+t_end = toc;
+disp("Visualization" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
