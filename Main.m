@@ -35,7 +35,7 @@ set.other.visFreq = 100; %once every N frames, visualization is done
 %obj=objects; gen=general, object=object, non=non-specific
 %ana=analyisis; ROI, other
 %res=results; ROI
-set.mic.frames = 50000; %#: 144E3 for a full 2h experiment with 50ms frames
+set.mic.frames = 50; %#: 144E3 for a full 2h experiment with 50ms frames
 obj.non.events_per_time = 0.002; %#_non-specific/s
 obj.gen.number = 10; %# objects
 obj.gen.av_binding_spots = 5; %# per object
