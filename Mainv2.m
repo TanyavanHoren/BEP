@@ -17,18 +17,17 @@ while 1==1
     end
 end
 addpath(genpath(folder)); %create empty folder for figures
-
 %% Modus and display
 tic;
 set.other.system_choice = 2; %1: spherical particle, 2: nanorod
 set.other.save_mode = 1; %1: matrices, 2: tiffs
 set.other.timetrace_on = 1; %1: also save timetrace, 0: no timetrace
-set.other.visFreq = 100; %visualization made every # frames
+set.other.visFreq = 5000; %visualization made every # frames
 
 %% Read input
 %set=settings; sample, mic=microscope, objects, para=parameters, bg=background, intensity, other
 %ROI; ROI(i): general, obj=object, sites, frames
-set.mic.frames = 50000; %#: 144E3 for a full 2h experiment with 50ms frames
+set.mic.frames = 144000; %#: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 2; %# ROIs or objects
 set.obj.av_binding_spots = 5; %# per object
 set.mic.laser_power = 100; %in mW
@@ -57,18 +56,22 @@ disp("Generate ROIs done" + newline + "Time taken: " + num2str(t_end) + " second
 %% Data generation
 tic;
 for i=1:set.ROI.number
-    
+    frame_data.ROI(i).frame = uint16(poissrnd(set.bg.mu,[set.ROI.size,set.ROI.size,set.mic.frames]));
     for t = set.mic.dt:set.mic.dt:set.mic.t_end
-        frame = generate_background(set);
+        frame = frame_data.ROI(i).frame(:,:,n_frame(i));
         ROIs = generate_binding_events(ROIs, set, t, i);
         frame = generate_specific_binding_intensity(ROIs, set, frame, i);
         %ROIs = generate_non_specific_binding_events();
         %frame = generate_nonspecific_binding_intensity();
         if set.other.timetrace_on ==1
-            time_trace_data = count_intensity_ROIs(time_trace_data, frame, n_frame(i), i);
+            %time_trace_data = count_intensity_ROIs(time_trace_data, frame, n_frame(i), i);
+            if n_frame(i) == 1
+                time_trace_data.ROI(i).frame = zeros([1, set.mic.frames]);
+            end
+            time_trace_data.ROI(i).frame(n_frame(i)) = sum(frame, 'all');
         end
         if set.other.save_mode == 1
-            frame_data = save_frames(frame, n_frame(i), frame_data, i);
+            frame_data.ROI(i).frame(:,:,n_frame(i)) =frame;
         else
             save_tiffs(frame, n_frame, i);
         end
@@ -83,7 +86,6 @@ end
 
 t_end = toc;
 disp("Generate data done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
-
 %% Visualize
 tic; 
 generate_time_traces(time_trace_data, set);
