@@ -27,6 +27,7 @@
 *.sqlite
 *.png
 *.fig
+*.asv
 
 # OS generated files #
 ######################
