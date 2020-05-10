@@ -1,4 +1,4 @@
 function frame = generate_frame(set)
-frame = int16(zeros(set.mic.pixels_x,set.mic.pixels_y)'); 
+frame = uint16(zeros(set.ROI.size,set.ROI.size)); 
 end
 

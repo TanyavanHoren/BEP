@@ -28,6 +28,8 @@
 *.png
 *.fig
 *.asv
+*.tiff
+*.tif
 
 # OS generated files #
 ######################

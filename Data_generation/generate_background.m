@@ -1,4 +1,4 @@
-function frame = generate_background(frame, set)
+function frame = generate_background(set)
 
-frame = frame + int16(poissrnd(set.other.av_background,[set.mic.pixels_y,set.mic.pixels_x]));
+frame = uint16(poissrnd(set.bg.mu,[set.ROI.size,set.ROI.size]));
 end

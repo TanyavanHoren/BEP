@@ -1,16 +1,14 @@
-function frame = generate_specific_binding_intensity(obj, set, frame)
+function frame = generate_specific_binding_intensity(ROIs, set, frame, i)
 
-for i=1:obj.gen.number
-    for j=1:obj.object(i).number_bind
-        if obj.object(i).site(j).intensity_factor>0 %if fraction of time bound
-            yc=obj.object(i).site(j).position_x/set.mic.pixelsize;
-            xc=obj.object(i).site(j).position_y/set.mic.pixelsize;
-            center = [xc;yc];
-            %gauss_data.I_max=obj.object(i).site(j).intensity_factor*poissrnd(40*set.other.av_background); 
-            gauss_data.I_max=round(obj.object(i).site(j).intensity_factor*obj.object(i).site(j).I_max);
-            gauss_data.sigma= 3*set.mic.pixelsize; 
-            frame = generate_frame_with_Gauss(frame, gauss_data, center); 
-        end
+gauss_data.sigma= set.mic.wavelength/(2*set.mic.NA*sqrt(8*log(2)))/set.mic.pixelsize;
+
+for j=1:ROIs.ROI(i).object_number_bind
+    if ROIs.ROI(i).site(j).intensity_factor>0 %if fraction of time bound
+        xc=ROIs.ROI(i).site(j).position_x/set.mic.pixelsize;
+        yc=ROIs.ROI(i).site(j).position_y/set.mic.pixelsize;
+        center = [yc;xc];
+        gauss_data.I_max=poissrnd(ROIs.ROI(i).site(j).intensity_factor*ROIs.ROI(i).site(j).I_max); %implementation shot noise
+        frame = generate_frame_with_Gauss(frame, gauss_data, center);
     end
 end
 end
