@@ -15,15 +15,15 @@ for j=1:ROIs.ROI(i).object_number_bind
                 tau=set.sample.td;
             end
             t_switch_new = t_switch+exprnd(tau); %determine new switch time
-            intensity_factor = intensity_factor + (t_switch-t_lb)/dt*isBound;
+            ROIs.ROI(i).site(j).I_max=lognrnd(set.intensity.mu, set.intensity.std);
+            intensity_factor = intensity_factor + (t_switch-t_lb)/dt*isBound*ROIs.ROI(i).site(j).I_max; %peak individual event
             isBound = abs(isBound-1);
             t_lb=t_switch;
             t_switch=t_switch_new;
-            ROIs.ROI(i).site(j).I_max=lognrnd(set.intensity.mu, set.intensity.std); %peak individual event
         end
-        intensity_factor=intensity_factor+(t-t_lb)/dt*isBound; %determine fraction bound
+        intensity_factor=intensity_factor+(t-t_lb)/dt*isBound*ROIs.ROI(i).site(j).I_max; %determine fraction bound %peak individual event
     else
-        intensity_factor=isBound;
+        intensity_factor=isBound*ROIs.ROI(i).site(j).I_max; %peak individual event
     end
     ROIs.ROI(i).site(j).isBound=isBound;
     ROIs.ROI(i).site(j).t_switch=t_switch;

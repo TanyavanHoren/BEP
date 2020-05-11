@@ -15,6 +15,7 @@ set.sample.tb = 1/set.sample.k_off; %s
 set.sample.td = 1/(set.sample.k_on*set.sample.concentration); %s
 set.sample.non_lowbound_tb = 0.2; %s lower bound tb range
 set.sample.non_upbound_tb = 6; %s upper bound tb range
+set.sample.non_on_object_chance = 0;
 
 set.obj.av_size_x = 0.07; %mu nanorod
 set.obj.av_size_y = 0.02; %mu nanorod
