@@ -34,11 +34,14 @@ set.para.bg.C = 0.79; %mW^-1
 set.bg.mu = set.para.bg.A+(set.para.bg.B*set.sample.concentration+set.para.bg.C)*set.mic.laser_power;
 %Peak intensity: lognrnd(mu, B)
 %mu = A*laserpower
-set.para.intensity.A=0.05; %mW^-1
-set.intensity.std=0.7; 
+set.para.intensity.A=0.12; %mW^-1 %was 0.05
+set.intensity.std=0.00; 
 set.intensity.mu=set.para.intensity.A*set.mic.laser_power;
 
 mean = exp(set.intensity.mu+set.intensity.std^2/2);
 variance = exp(2*set.intensity.mu+set.intensity.std^2)*exp(set.intensity.std^2-1);
 SNR = mean/sqrt(set.bg.mu+(variance)); %estimate SNR
+
+set.ana.std_factor=5; %threshold at mu+factor*sigma
+set.ana.iterations=600; % number of iterations for solver of localizations, higher slower but better
 end
