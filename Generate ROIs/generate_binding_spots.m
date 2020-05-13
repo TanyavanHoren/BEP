@@ -2,7 +2,7 @@ function ROIs = generate_binding_spots(ROIs, set, i)
 
 if set.other.system_choice ==1
     for j=1:ROIs.ROI(i).object_number_bind
-        r=rand()*ROIs.ROI(i).object_radius;
+        r=sqrt(rand())*ROIs.ROI(i).object_radius;
         theta=rand()*2*pi;
         ROIs.ROI(i).site(j).position_x=r*cos(theta);
         ROIs.ROI(i).site(j).position_y=r*sin(theta);

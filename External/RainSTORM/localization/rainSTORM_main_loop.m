@@ -4,11 +4,14 @@ rad = settings.rad.val;
 Thresh = settings.Thresh.val;
 
 % 1. Identify local maxima above threshold, and return [row,col,magnitude]
-myPixels = rainSTORM_avNMS(Frame,rad);
+myPixels = rainSTORM_avNMS_Dion(Frame,rad);
 
 % 2. Thresholding. To remove noise maxima and weak signals.
 myPixels((myPixels(:,3))<Thresh,:)=[]; % Apply threshold
 myPixels = flipud(sortrows(myPixels,3)); % Sort for human-readability
+% if size(myPixels,1)>0
+%     myPixels=myPixels;
+% end
 
 bkgdSig = std(double(Frame(Frame < mean(Frame(:))))); % Avoids signal
 
