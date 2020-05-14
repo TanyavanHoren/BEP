@@ -18,7 +18,7 @@ SupResParams = [];
 %clear parfor_progress_2
 %rainSTORM_parfor_progress(parfor_progress_norm_factor,1);
 if rainSTORM_env.parCompTool
-    for lpIm=1:numberOfFrames
+    parfor lpIm=1:numberOfFrames
         frame_to_process=rainSTORM_raw_stack(:,:,lpIm);
         SRP = rainSTORM_main_loop(lpIm,frame_to_process,algo_handle,settings);
         SupResParams = [SupResParams, SRP];
