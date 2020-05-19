@@ -1,4 +1,4 @@
-function plot_loc_and_sites = plot_loc_and_sites(set, ROIs, i, ana)
+function [ellipseParam,r_ellipse] = plot_loc_and_sites(set, ROIs, i, ana)
 
 figure
     scatter(ana.ROI(i).loc.good_x,ana.ROI(i).loc.good_y,1)
@@ -12,7 +12,7 @@ figure
     elseif set.other.system_choice == 2
         square = plot_square(ROIs, set, i);
     end
-    error_elipse(ana, i)
+    [ellipseParam,r_ellipse] = error_elipse(ana, i);
     xlabel('x-position (pixels)') 
     ylabel('y-position (pixels)') 
     box on 

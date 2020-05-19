@@ -31,11 +31,11 @@ set.other.visFreq = 5000; %visualization made every # frames
 %% Read input
 %set=settings; sample, mic=microscope, objects, para=parameters, bg=background, intensity, other
 %ROI; ROI(i): general, obj=object, sites, frames
-set.mic.frames = 10000; %: 144E3 for a full 2h experiment with 50ms frames
+set.mic.frames = 500000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
 set.obj.av_binding_spots = 20; % per object
 set.mic.laser_power = 100; %in mW
-set.para.freq_ratio = 10; %ratio f_specific/f_non_specific
+set.para.freq_ratio = 4; %ratio f_specific/f_non_specific
 set.ana.loc.algo_name = 'GF_Dion'; %Options: GF3, GF, CoM
 [set, SNR]  = give_inputs(set); %other inputs
 set.ana.rainSTORM_settings = create_standard_settings(set); %mimick rainSTORM settings
@@ -118,14 +118,17 @@ if set.other.loc_analysis == 1
 end
 
 %% Localization and time trace analysis
+
 if set.other.loc_analysis == 1
     tic
     for i=1:set.ROI.number
+        ana = succes_rate_loc(ana, i);
         ana = position_correction(ana, set, i);
         ana = reject_outliers(ana, i);
         visualize_rejection(ana,i, set, ROIs)
-        plot_loc_and_sites(set, ROIs, i, ana);
-        %ana = reject_outside_ellipse();
+        [ellipseParam,r_ellipse] = plot_loc_and_sites(set, ROIs, i, ana);
+        ana = reject_outside_ellipse(ana, r_ellipse, i);
+        [ellipseParam,r_ellipse] = plot_loc_and_sites(set, ROIs, i, ana);
     end
     t_end = toc;
     disp("Localization analysis done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
@@ -134,6 +137,11 @@ end
 
 if set.other.time_analysis == 1
     tic;
+    for i=1:set.ROI.number
+        ana = reject_bright_dark(ana, i);
+        ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i);
+        check = determine_tf_pn(ana, i);
+    end
     generate_bright_dark_histograms(ana, set)
     ana = determine_averages_and_binding_spots(ana, set);
     generate_av_tau_plot(ana, set)

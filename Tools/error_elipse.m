@@ -1,4 +1,4 @@
-function error_ellipse = error_elipse(ana, i)
+function [ellipseParam,r_ellipse] = error_elipse(ana, i)
 
 y1= ana.ROI(i).loc.good_x;
 y2= ana.ROI(i).loc.good_y;
@@ -44,6 +44,7 @@ X0=avg(1);
 Y0=avg(2);
 a=chisquare_val*sqrt(largest_eigenval);
 b=chisquare_val*sqrt(smallest_eigenval);
+AR = a/b;
 
 % the ellipse in x and y coordinates 
 ellipse_x_r  = a*cos( theta_grid );
@@ -54,6 +55,10 @@ R = [ cos(phi) sin(phi); -sin(phi) cos(phi) ];
 
 %let's rotate the ellipse to some angle phi
 r_ellipse = [ellipse_x_r;ellipse_y_r]' * R;
+r_ellipse(:,1) = r_ellipse(:,1) + X0;
+r_ellipse(:,2) = r_ellipse(:,2) + Y0;
+
+ellipseParam = [ a b AR phi X0 Y0];
 
 % Draw the error ellipse
 plot(r_ellipse(:,1) + X0,r_ellipse(:,2) + Y0,'-')
