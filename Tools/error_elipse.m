@@ -58,7 +58,7 @@ r_ellipse = [ellipse_x_r;ellipse_y_r]' * R;
 r_ellipse(:,1) = r_ellipse(:,1) + X0;
 r_ellipse(:,2) = r_ellipse(:,2) + Y0;
 
-ellipseParam = [ a b AR phi X0 Y0];
+ellipseParam = [a b AR phi X0 Y0];
 
 % Draw the error ellipse
 plot(r_ellipse(:,1) + X0,r_ellipse(:,2) + Y0,'-')

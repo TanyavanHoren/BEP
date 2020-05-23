@@ -10,6 +10,7 @@ data = [[ana.ROI(i).SupResParams.frame_idx]' [ana.ROI(i).SupResParams.isOutlier]
 data(data(:,2) == 0,:)=[];
 on_time_log=false(1,length(ana.ROI(i).timetrace_data.ontime));
 off_time_log=false(1,length(ana.ROI(i).timetrace_data.ontime));
+%counter = 1;
 
 for j=1:length(data)
     bright_index = ana.ROI(i).timetrace_data.labeledOns(data(j,1)); %find # bright time
@@ -23,10 +24,10 @@ for j=1:length(data)
             off_time_log(1,bright_index+1)=true;
         end
     elseif begin_dark==0
+        off_time_log(1,bright_index)=true;
         try
             off_time_log(1,bright_index-1)=true;
         end
-        off_time_log(1,bright_index)=true;
     end
 end
 

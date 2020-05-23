@@ -31,7 +31,7 @@ set.other.visFreq = 5000; %visualization made every # frames
 %% Read input
 %set=settings; sample, mic=microscope, objects, para=parameters, bg=background, intensity, other
 %ROI; ROI(i): general, obj=object, sites, frames
-set.mic.frames = 500000; %: 144E3 for a full 2h experiment with 50ms frames
+set.mic.frames = 10000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
 set.obj.av_binding_spots = 20; % per object
 set.mic.laser_power = 100; %in mW
@@ -118,17 +118,16 @@ if set.other.loc_analysis == 1
 end
 
 %% Localization and time trace analysis
-
 if set.other.loc_analysis == 1
     tic
     for i=1:set.ROI.number
         ana = succes_rate_loc(ana, i);
         ana = position_correction(ana, set, i);
         ana = reject_outliers(ana, i);
-        visualize_rejection(ana,i, set, ROIs)
+        visualize_rejection_outliers(ana,i, set, ROIs);
         [ellipseParam,r_ellipse] = plot_loc_and_sites(set, ROIs, i, ana);
         ana = reject_outside_ellipse(ana, r_ellipse, i);
-        [ellipseParam,r_ellipse] = plot_loc_and_sites(set, ROIs, i, ana);
+        visualize_rejection_ellipse(ana,i, set, ROIs, r_ellipse, ellipseParam);
     end
     t_end = toc;
     disp("Localization analysis done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
@@ -138,13 +137,13 @@ end
 if set.other.time_analysis == 1
     tic;
     for i=1:set.ROI.number
-        ana = reject_bright_dark(ana, i);
+        ana = reject_bright_dark_new(ana, i);
         ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i);
         check = determine_tf_pn(ana, i);
     end
-    generate_bright_dark_histograms(ana, set)
+    generate_bright_dark_histograms(ana, set);
     ana = determine_averages_and_binding_spots(ana, set);
-    generate_av_tau_plot(ana, set)
+    generate_av_tau_plot(ana, set);
     t_end = toc;
     disp("Time trace analysis done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
