@@ -31,7 +31,7 @@ set.other.visFreq = 5000; %visualization made every # frames
 %% Read input
 %set=settings; sample, mic=microscope, objects, para=parameters, bg=background, intensity, other
 %ROI; ROI(i): general, obj=object, sites, frames
-set.mic.frames = 10000; %: 144E3 for a full 2h experiment with 50ms frames
+set.mic.frames = 100000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
 set.obj.av_binding_spots = 20; % per object
 set.mic.laser_power = 100; %in mW
@@ -147,3 +147,82 @@ if set.other.time_analysis == 1
     t_end = toc;
     disp("Time trace analysis done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
+
+%% DBSCAN
+figure 
+X = [[ana.ROI(1).SupResParams.x_coord]'  [ana.ROI(1).SupResParams.y_coord]'];
+idx = dbscan(X,0.1,30);
+gscatter(X(:,1),X(:,2),idx);
+hold on
+if set.other.system_choice == 1
+    viscircles([0 0],ROIs.ROI(1).object_radius/set.mic.pixelsize, 'LineWidth', 0.5);
+elseif set.other.system_choice == 2
+    square = plot_square(ROIs, set, 1);
+end
+xlabel('x-position (pixels)')
+ylabel('y-position (pixels)')
+box on
+title('DBSCAN Using Euclidean Distance Metric')
+
+
+%% OPTICS 
+[ SetOfClusters, RD, CD, order ] = cluster_optics(X, minpts, epsilon);
+for i=1:size(X,1)
+    for j=1:size([SetOfClusters.start],2)
+        if order(i)>SetOfClusters(j).start&&order(i)<SetOfClusters(j).end
+            idx(i)=j;
+        end
+    end
+end
+figure
+gscatter(X(:,1),X(:,2),idx);
+hold on
+if set.other.system_choice == 1
+    viscircles([0 0],ROIs.ROI(1).object_radius/set.mic.pixelsize, 'LineWidth', 0.5);
+elseif set.other.system_choice == 2
+    square = plot_square(ROIs, set, 1);
+end
+xlabel('x-position (pixels)')
+ylabel('y-position (pixels)')
+box on
+title('OPTICS')
+%% OPTICS test
+% new_RD = [];
+% for i=1:size(order,2)
+%     new_RD = [new_RD RD(order(i))];
+% end
+X_filter(:,:) = X(RD'<0.05,:);
+%% Optics test plot
+figure
+scatter(X_filter(:,1), X_filter(:,2),10,'.')
+hold on
+if set.other.system_choice == 1
+    viscircles([0 0],ROIs.ROI(1).object_radius/set.mic.pixelsize, 'LineWidth', 0.5);
+elseif set.other.system_choice == 2
+    square = plot_square(ROIs, set, 1);
+end
+xlabel('x-position (pixels)')
+ylabel('y-position (pixels)')
+box on
+title('OPTICS filtered')
+%% GMM
+gm = fitgmdist(X,2);
+figure
+scatter(X(:,1),X(:,2),10,'.') % Scatter plot with points of size 10
+hold on
+gmPDF = @(x,y)reshape(pdf(gm,[x(:) y(:)]),size(x));
+fcontour(gmPDF,[-6 8 -4 6])
+idx = cluster(gm,X);
+figure;
+gscatter(X(:,1),X(:,2),idx);
+hold on
+if set.other.system_choice == 1
+    viscircles([0 0],ROIs.ROI(1).object_radius/set.mic.pixelsize, 'LineWidth', 0.5);
+elseif set.other.system_choice == 2
+    square = plot_square(ROIs, set, 1);
+end
+legend('Cluster 1','Cluster 2','Location','best');
+xlabel('x-position (pixels)')
+ylabel('y-position (pixels)')
+box on
+title('GMM')

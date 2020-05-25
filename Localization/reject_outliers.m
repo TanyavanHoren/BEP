@@ -1,7 +1,7 @@
 function ana = reject_outliers(ana, i)
 
 radial_distance = sqrt([ana.ROI(i).SupResParams.x_coord].^2+[ana.ROI(i).SupResParams.y_coord].^2);
-logical = num2cell(isoutlier(radial_distance,'median'));
+logical = num2cell(isoutlier(radial_distance,'percentiles', [0 85]));
 [ana.ROI(i).SupResParams.isOutlier]=logical{:};
 ana.ROI(i).loc.good_frame = [ana.ROI(i).SupResParams.frame_idx]'; %copy
 ana.ROI(i).loc.good_frame = [ana.ROI(i).loc.good_frame([ana.ROI(i).SupResParams.isOutlier]==0)]; %condition
