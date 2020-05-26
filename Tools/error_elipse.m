@@ -38,7 +38,8 @@ avg = mean(data);
 
 % Get the 95% confidence interval error ellipse
 chisquare_val = 2.4477;
-theta_grid = linspace(0,2*pi);
+%theta_grid = linspace(0,2*pi);
+theta_grid = 0:2*pi/1000:2*pi;
 phi = angle;
 X0=avg(1);
 Y0=avg(2);
@@ -59,24 +60,24 @@ r_ellipse(:,1) = r_ellipse(:,1) + X0;
 r_ellipse(:,2) = r_ellipse(:,2) + Y0;
 
 ellipseParam = [a b AR phi X0 Y0];
-
-% Draw the error ellipse
-plot(r_ellipse(:,1) + X0,r_ellipse(:,2) + Y0,'-')
-hold on;
-
-% Plot the original data
-plot(data(:,1), data(:,2), '.');
-mindata = min(min(data));
-maxdata = max(max(data));
-% Xlim([mindata-3, maxdata+3]);
-% Ylim([mindata-3, maxdata+3]);
-hold on;
+% figure
+% % Draw the error ellipse
+% plot(r_ellipse(:,1) + X0,r_ellipse(:,2) + Y0,'-')
+% hold on;
 % 
-% % Plot the eigenvectors
+% % Plot the original data
+% plot(data(:,1), data(:,2), '.');
+% mindata = min(min(data));
+% maxdata = max(max(data));
+% % Xlim([mindata-3, maxdata+3]);
+% % Ylim([mindata-3, maxdata+3]);
+
+% % 
+% % % Plot the eigenvectors
 % quiver(X0, Y0, largest_eigenvec(1)*sqrt(largest_eigenval), largest_eigenvec(2)*sqrt(largest_eigenval), '-m', 'LineWidth',2);
 % quiver(X0, Y0, smallest_eigenvec(1)*sqrt(smallest_eigenval), smallest_eigenvec(2)*sqrt(smallest_eigenval), '-g', 'LineWidth',2);
 % hold on;
 
 % Set the axis labels
-hXLabel = xlabel('x');
-hYLabel = ylabel('y');
+% hXLabel = xlabel('x');
+% hYLabel = ylabel('y');

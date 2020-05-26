@@ -1,4 +1,4 @@
-function ana = reject_outliers(ana, i, set, ROIs)
+function ana = reject_outliers_temp(ana, i, set, ROIs)
 
 radial_distance = sqrt([ana.ROI(i).SupResParams.x_coord].^2+[ana.ROI(i).SupResParams.y_coord].^2);
 % logical = num2cell(isoutlier(radial_distance,'percentiles', [0 85]));
@@ -13,4 +13,3 @@ ana.ROI(i).loc.good_y = [ana.ROI(i).loc.good_y([ana.ROI(i).SupResParams.isOutlie
 ana.ROI(i).loc.good = [ana.ROI(i).loc.good_frame ana.ROI(i).loc.good_x ana.ROI(i).loc.good_y];
 visualize_rejection_outliers(ana,i, set, ROIs)
 end
-

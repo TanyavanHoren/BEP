@@ -1,4 +1,4 @@
-function rejection_visualization_ellipse = visualize_rejection_ellipse(ana,i, set, ROIs, r_ellipse, ellipseParam)
+function rejection_visualization_ellipse = visualize_rejection_ellipse(ana,i, set, ROIs, r_ellipse)
 
 figure
 scatter([ana.ROI(i).loc.good_x],[ana.ROI(i).loc.good_y], 1, 'r');
@@ -21,8 +21,9 @@ if set.other.system_choice == 1
 elseif set.other.system_choice == 2
     square = plot_square(ROIs, set, i);
 end
-plot(r_ellipse(:,1) + ellipseParam(5),r_ellipse(:,2) + ellipseParam(6),'-')
+plot(r_ellipse(:,1) ,r_ellipse(:,2),'-')
 xlabel('x-position (pixels)')
 ylabel('y-position (pixels)')
 box on
+title('Error ellipse')
 end

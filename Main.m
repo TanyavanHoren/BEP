@@ -33,9 +33,9 @@ set.other.visFreq = 5000; %visualization made every # frames
 %ROI; ROI(i): general, obj=object, sites, frames
 set.mic.frames = 100000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
-set.obj.av_binding_spots = 20; % per object
+set.obj.av_binding_spots = 100; % per object
 set.mic.laser_power = 100; %in mW
-set.para.freq_ratio = 4; %ratio f_specific/f_non_specific
+set.para.freq_ratio = 0.5; %ratio f_specific/f_non_specific
 set.ana.loc.algo_name = 'GF_Dion'; %Options: GF3, GF, CoM
 [set, SNR]  = give_inputs(set); %other inputs
 set.ana.rainSTORM_settings = create_standard_settings(set); %mimick rainSTORM settings
@@ -96,44 +96,56 @@ end
 t_end = toc;
 disp("Generate data done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 
-%% Obtain time trace
+%% Time trace analysis - Pre-correction
 if set.other.time_analysis == 1
     tic;
     generate_time_traces(time_trace_data, set);
     for i=1:set.ROI.number
         ana.ROI(i).timetrace_data = spikes_analysis(time_axis, time_trace_data.ROI(i).frame(:)', i, 0, set);
     end
+    generate_bright_dark_histograms(ana, set);
+    ana = determine_averages_and_binding_spots(ana, set);
+    generate_av_tau_plot(ana, set);
     t_end = toc;
-    disp("Time trace analysis done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+    disp("Time trace analysis - Pre-correction done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
 
-%% Obtain localizations
+%% Localization
 if set.other.loc_analysis == 1
     tic
     for i=1:set.ROI.number
         ana.ROI(i).SupResParams=rainSTORM_main(rainSTORM_env, frame_data.ROI(i).frame, set);
+        ana = succes_rate_loc(ana, i);
+        ana = position_correction(ana, set, i);
     end
     t_end = toc;
     disp("Localization done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
 
-%% Localization and time trace analysis
+%% Localization rejection
 if set.other.loc_analysis == 1
     tic
     for i=1:set.ROI.number
-        ana = succes_rate_loc(ana, i);
-        ana = position_correction(ana, set, i);
-        ana = reject_outliers(ana, i);
-        visualize_rejection_outliers(ana,i, set, ROIs);
-        [ellipseParam,r_ellipse] = plot_loc_and_sites(set, ROIs, i, ana);
-        ana = reject_outside_ellipse(ana, r_ellipse, i);
-        visualize_rejection_ellipse(ana,i, set, ROIs, r_ellipse, ellipseParam);
+        %% G: Geometry-based
+        %% G1: (Error Ellipse)
+        ana = reject_outliers(ana, i, set, ROIs);
+        ana = reject_outside_ellipse(ana,i, set, ROIs);
+        %% C: Cluster-based
+        %% C1: GMM (Gaussian Mixture Model)
+        function_gmm(ana, set, ROIs, i);
+        %labels in SupResParams
+        %% C2: DBSCAN
+        function_dbscan(ana, set, ROIs, i);
+        %labels in SupResParams
+        %% C3: OPTICS
+        function_optics(ana, set, ROIs, i);
+        %labels in SupResParams
     end
     t_end = toc;
-    disp("Localization analysis done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+    disp("Localization rejection done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
 
-
+%% Time trace analysis - Corrected
 if set.other.time_analysis == 1
     tic;
     for i=1:set.ROI.number
@@ -141,88 +153,9 @@ if set.other.time_analysis == 1
         ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i);
         check = determine_tf_pn(ana, i);
     end
-    generate_bright_dark_histograms(ana, set);
-    ana = determine_averages_and_binding_spots(ana, set);
-    generate_av_tau_plot(ana, set);
+    generate_corr_bright_dark_histograms(ana, set);
+    ana = determine_corr_averages_and_binding_spots(ana, set);
+    generate_corr_av_tau_plot(ana, set);
     t_end = toc;
-    disp("Time trace analysis done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+    disp("Time trace analysis - Corrected done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
-
-%% DBSCAN
-figure 
-X = [[ana.ROI(1).SupResParams.x_coord]'  [ana.ROI(1).SupResParams.y_coord]'];
-idx = dbscan(X,0.1,30);
-gscatter(X(:,1),X(:,2),idx);
-hold on
-if set.other.system_choice == 1
-    viscircles([0 0],ROIs.ROI(1).object_radius/set.mic.pixelsize, 'LineWidth', 0.5);
-elseif set.other.system_choice == 2
-    square = plot_square(ROIs, set, 1);
-end
-xlabel('x-position (pixels)')
-ylabel('y-position (pixels)')
-box on
-title('DBSCAN Using Euclidean Distance Metric')
-
-
-%% OPTICS 
-[ SetOfClusters, RD, CD, order ] = cluster_optics(X, minpts, epsilon);
-for i=1:size(X,1)
-    for j=1:size([SetOfClusters.start],2)
-        if order(i)>SetOfClusters(j).start&&order(i)<SetOfClusters(j).end
-            idx(i)=j;
-        end
-    end
-end
-figure
-gscatter(X(:,1),X(:,2),idx);
-hold on
-if set.other.system_choice == 1
-    viscircles([0 0],ROIs.ROI(1).object_radius/set.mic.pixelsize, 'LineWidth', 0.5);
-elseif set.other.system_choice == 2
-    square = plot_square(ROIs, set, 1);
-end
-xlabel('x-position (pixels)')
-ylabel('y-position (pixels)')
-box on
-title('OPTICS')
-%% OPTICS test
-% new_RD = [];
-% for i=1:size(order,2)
-%     new_RD = [new_RD RD(order(i))];
-% end
-X_filter(:,:) = X(RD'<0.05,:);
-%% Optics test plot
-figure
-scatter(X_filter(:,1), X_filter(:,2),10,'.')
-hold on
-if set.other.system_choice == 1
-    viscircles([0 0],ROIs.ROI(1).object_radius/set.mic.pixelsize, 'LineWidth', 0.5);
-elseif set.other.system_choice == 2
-    square = plot_square(ROIs, set, 1);
-end
-xlabel('x-position (pixels)')
-ylabel('y-position (pixels)')
-box on
-title('OPTICS filtered')
-%% GMM
-gm = fitgmdist(X,2);
-figure
-scatter(X(:,1),X(:,2),10,'.') % Scatter plot with points of size 10
-hold on
-gmPDF = @(x,y)reshape(pdf(gm,[x(:) y(:)]),size(x));
-fcontour(gmPDF,[-6 8 -4 6])
-idx = cluster(gm,X);
-figure;
-gscatter(X(:,1),X(:,2),idx);
-hold on
-if set.other.system_choice == 1
-    viscircles([0 0],ROIs.ROI(1).object_radius/set.mic.pixelsize, 'LineWidth', 0.5);
-elseif set.other.system_choice == 2
-    square = plot_square(ROIs, set, 1);
-end
-legend('Cluster 1','Cluster 2','Location','best');
-xlabel('x-position (pixels)')
-ylabel('y-position (pixels)')
-box on
-title('GMM')
