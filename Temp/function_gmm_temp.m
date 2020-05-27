@@ -1,6 +1,6 @@
 function idx = function_gmm_temp(ana, set, ROIs, i)
 
-gm = fitgmdist([[ana.ROI(i).SupResParams.x_coord]'  [ana.ROI(i).SupResParams.y_coord]'],4); %give data, specify cluster number
+gm = fitgmdist([[ana.ROI(i).SupResParams.x_coord]'  [ana.ROI(i).SupResParams.y_coord]'],2); %give data, specify cluster number
 idx = cluster(gm,[[ana.ROI(i).SupResParams.x_coord]'  [ana.ROI(i).SupResParams.y_coord]']);
 figure
 gscatter([ana.ROI(i).SupResParams.x_coord]',[ana.ROI(i).SupResParams.y_coord]',idx);

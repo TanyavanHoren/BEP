@@ -107,7 +107,7 @@ if set.other.time_analysis == 1
     ana = determine_averages_and_binding_spots(ana, set);
     generate_av_tau_plot(ana, set);
     t_end = toc;
-    disp("Time trace analysis - Pre-correction done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+    disp("Time trace analysis - Pre-correction - done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
 
 %% Localization
@@ -145,7 +145,7 @@ if set.other.loc_analysis == 1
     disp("Localization rejection done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
 
-%% Time trace analysis - Corrected
+%% Time trace analysis - Post-correction
 if set.other.time_analysis == 1
     tic;
     for i=1:set.ROI.number
@@ -157,5 +157,5 @@ if set.other.time_analysis == 1
     ana = determine_corr_averages_and_binding_spots(ana, set);
     generate_corr_av_tau_plot(ana, set);
     t_end = toc;
-    disp("Time trace analysis - Corrected done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+    disp("Time trace analysis - Post-correction - done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
