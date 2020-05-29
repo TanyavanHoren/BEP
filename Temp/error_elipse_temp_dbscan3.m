@@ -1,7 +1,7 @@
-function [ellipseParam,r_ellipse] = error_elipse(ana, i)
+function [ellipseParam,r_ellipse] = error_elipse_temp_dbscan3(ana, i)
 
-y1= ana.ROI(i).loc.good_x;
-y2= ana.ROI(i).loc.good_y;
+y1= ana.ROI(i).loc.good_x_DBSCAN3;
+y2= ana.ROI(i).loc.good_y_DBSCAN3;
 data = [y1 y2];
 
 % Calculate the eigenvectors and eigenvalues

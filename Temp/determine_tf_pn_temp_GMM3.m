@@ -10,8 +10,8 @@ for j=1:size(ana.ROI(i).SupResParams,2)
     false_pos_log(j)=sum(ana.ROI(i).SupResParams(j).isOutlier_GMM3==0 && ana.ROI(i).SupResParams(j).isNonSpecific==1);%0(not outlier), 1(non-specific)
     false_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isOutlier_GMM3~=0 && ana.ROI(i).SupResParams(j).isNonSpecific==0); %1(Outlier), 0(specific)
 end
-check(k).true_pos=sum(true_pos_log);
-check(k).true_neg=sum(true_neg_log);
-check(k).false_pos=sum(false_pos_log);
-check(k).false_neg=sum(false_neg_log);
+check(k).true_pos=sum(true_pos_log)/ana.ROI(i).numSpecific;
+check(k).true_neg=sum(true_neg_log)/ana.ROI(i).numNonSpecific;
+check(k).false_pos=sum(false_pos_log)/ana.ROI(i).numNonSpecific;
+check(k).false_neg=sum(false_neg_log)/ana.ROI(i).numSpecific;
 end

@@ -8,6 +8,8 @@ for j=1:size(ana.ROI(i).SupResParams,2)
         non_spec_log(j)=1;
     end
 end
+ana.ROI(i).numNonSpecific = sum(non_spec_log);
+ana.ROI(i).numSpecific = size(non_spec_log,2)-sum(non_spec_log);
 logical = num2cell(non_spec_log);
 [ana.ROI(i).SupResParams.isNonSpecific]=logical{:};
 end

@@ -1,4 +1,4 @@
-function ana = reject_outside_ellipse_temp_gmm2(ana,i, set, ROIs, idx_gmm, idx_right_gmm)
+function ana = reject_outside_ellipse_temp_gmm2(ana,i, set, ROIs, idx_gmm, idx_right_gmm, makePlot)
 
 logical = num2cell(idx_gmm'~=idx_right_gmm.*ones(1,length(ana.ROI(i).SupResParams)));
 [ana.ROI(i).SupResParams.isOutlier_GMM2]=logical{:};
@@ -23,7 +23,9 @@ for j=1:size(ana.ROI(i).SupResParams,2)
         ana.ROI(i).SupResParams(j).isOutlier_GMM2=2;
     end
 end
-visualize_rejection_ellipse_temp_gmm2(ana,i, set, ROIs, r_ellipse);
+if makePlot == 1
+    visualize_rejection_ellipse_temp_gmm2(ana,i, set, ROIs, r_ellipse);
+end
 ana.ROI(i).loc=[];
 
 end
