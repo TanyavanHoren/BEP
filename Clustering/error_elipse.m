@@ -1,4 +1,4 @@
-function [ellipseParam,r_ellipse] = error_elipse_default(ana, i)
+function [ellipseParam,r_ellipse] = error_elipse(ana, i)
 
 y1= ana.ROI(i).loc.good_x;
 y2= ana.ROI(i).loc.good_y;

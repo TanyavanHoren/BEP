@@ -25,5 +25,4 @@ if makePlot==1
     visualize_rejection_ellipse_temp_dbscan3(ana,i, set, ROIs, r_ellipse);
 end
 ana.ROI(i).loc=[];
-
 end

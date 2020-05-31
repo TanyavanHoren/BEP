@@ -7,13 +7,12 @@ hold on
 %plot non-outliers
 scatter([ana.ROI(i).loc.good_x],[ana.ROI(i).loc.good_y], 1, 'g');
 %draw actual particle shape
-if set.other.system_choice == 1
-    viscircles([0 0],ROIs.ROI(i).object_radius/set.mic.pixelsize, 'LineWidth', 0.5);
-elseif set.other.system_choice == 2
-    square = plot_square(ROIs, set, i);
-end
+hold on 
+plot_object_binding_spots(ROIs, set, i);
 xlabel('x-position (pixels)')
 ylabel('y-position (pixels)')
+xlim([-set.ROI.size/2 set.ROI.size/2])
+ylim([([-set.ROI.size/2 set.ROI.size/2])])
 box on
 title('Outlier rejection')
 end
