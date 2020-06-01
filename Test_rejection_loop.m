@@ -4,7 +4,7 @@ clc
 
 %% Give datasets to analyze 
 %workspaces=["non05bind5.mat", "non05bind20.mat", "non05bind100.mat", "non1bind5.mat", "non1bind20.mat", "non1bind100.mat", "non10bind5.mat", "non10bind20.mat", "non10bind100.mat"];
-workspaces=["non05bind5.mat"];
+workspaces=["non10bind100.mat"];
 
 %% Determine false/true positives/negatives
 for i=1:size(workspaces,2)

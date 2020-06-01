@@ -67,3 +67,19 @@ xlabel('minPts');
 ylabel('eps');
 zlabel('Average false positives and negatives - averaged over datasets');
 box on
+
+%% Find minimum per dataset
+for i=1:size(workspaces,2)
+    [min_val(i),idx(i)]=min(false_av.dataset(i).dbscan(:));
+    [row(i),col(i)]=ind2sub(size(false_av.dataset(i).dbscan),idx(i));
+    minima.dataset(i).minima_eps=eps(row(i));
+    minima.dataset(i).minima_minPts=minPts(col(i));
+    minima.dataset(i).minima_val=min_val(i);
+end
+
+%% Find minimum for averaged results
+[min_val_av,idx_av]=min(false_av_tot_av(:));
+[row_av,col_av]=ind2sub(size(false_av_tot_av),idx_av);
+minima.av_eps=eps(row_av);
+minima.av_minPts=minPts(col_av);
+minima.av_val=min_val_av;
