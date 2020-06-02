@@ -1,4 +1,4 @@
-function check = Test_rejection_optimalization(S, makePlot)
+function check = Optimize_dbscan_param(S, makePlot)
 %% Parameters
 rej.outlier_std_factor=5; %outlier rejection for d>d_av+..*sqrt(d_av)
 rej.cluster_std_factor=7; %rejection clusters with number of localizations n<n_min_av-..*sqrt(n_min_av)

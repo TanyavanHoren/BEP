@@ -22,7 +22,7 @@ for i=1:size(workspaces,2)
             S.rej.dbscan_minPts=minPts(n);
             S.rej.dbscan_eps=eps(m);
             % Determine false/true positives/negatives
-            checks.dataset(i).check = Test_rejection_optimalization(S,0);
+            checks.dataset(i).check = Optimize_dbscan_param(S,0);
             % Delete empty row corresponding to k=1
             checks.dataset(i).check( all( cell2mat( arrayfun( @(x) structfun( @isempty, x ), checks.dataset(i).check, 'UniformOutput', false ) ), 1 ) ) = [];
             false_pos.dataset(i).dbscan(m,n)=checks.dataset(i).check.false_pos;

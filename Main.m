@@ -21,7 +21,7 @@ rainSTORM_env = startup(); %start up localization software
 
 %% Modus and display
 tic;
-set.other.system_choice = 1; %1: spherical particle, 2: nanorod
+set.other.system_choice = 2; %1: spherical particle, 2: nanorod
 set.other.save_mode = 1; %1: matrices, 2: tiffs
 set.other.timetrace_on = 1; %0: do not create timetrace, 1: do create
 set.other.loc_analysis = 1; %0: no localization analysis, 1: do analyze 
@@ -33,7 +33,7 @@ set.other.visFreq = 5000; %visualization made every # frames
 %ROI; ROI(i): general, obj=object, sites, frames
 set.mic.frames = 100000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
-set.obj.av_binding_spots = 100; % per object
+set.obj.av_binding_spots = 20; % per object
 set.mic.laser_power = 100; %in mW
 set.para.freq_ratio = 0.5; %ratio f_specific/f_non_specific
 set.ana.loc.algo_name = 'GF_Dion'; %Options: GF3, GF, CoM
@@ -103,7 +103,7 @@ if set.other.time_analysis == 1
     for i=1:set.ROI.number
         ana.ROI(i).timetrace_data = spikes_analysis(time_axis, time_trace_data.ROI(i).frame(:)', i, 0, set);
     end
-    generate_bright_dark_histograms(ana, set);
+    %generate_bright_dark_histograms(ana, set);
     ana = determine_averages_and_binding_spots(ana, set);
     generate_av_tau_plot(ana, set);
     t_end = toc;
@@ -122,40 +122,40 @@ if set.other.loc_analysis == 1
     disp("Localization done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
 
-%% Localization rejection
-if set.other.loc_analysis == 1
-    tic
-    for i=1:set.ROI.number
-        %% G: Geometry-based
-        %% G1: (Error Ellipse)
-        ana = reject_outliers(ana, i, set, ROIs);
-        ana = reject_outside_ellipse(ana,i, set, ROIs);
-        %% C: Cluster-based
-        %% C1: GMM (Gaussian Mixture Model)
-        function_gmm(ana, set, ROIs, i);
-        %labels in SupResParams
-        %% C2: DBSCAN
-        function_dbscan(ana, set, ROIs, i);
-        %labels in SupResParams
-        %% C3: OPTICS
-        function_optics(ana, set, ROIs, i);
-        %labels in SupResParams
-    end
-    t_end = toc;
-    disp("Localization rejection done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
-end
-
-%% Time trace analysis - Post-correction
-if set.other.time_analysis == 1
-    tic;
-    for i=1:set.ROI.number
-        ana = reject_bright_dark_new(ana, i);
-        ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i);
-        check = determine_tf_pn(ana, i);
-    end
-    generate_corr_bright_dark_histograms(ana, set);
-    ana = determine_corr_averages_and_binding_spots(ana, set);
-    generate_corr_av_tau_plot(ana, set);
-    t_end = toc;
-    disp("Time trace analysis - Post-correction - done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
-end
+% %% Localization rejection
+% if set.other.loc_analysis == 1
+%     tic
+%     for i=1:set.ROI.number
+%         %% G: Geometry-based
+%         %% G1: (Error Ellipse)
+%         ana = reject_outliers(ana, i, set, ROIs);
+%         ana = reject_outside_ellipse(ana,i, set, ROIs);
+%         %% C: Cluster-based
+%         %% C1: GMM (Gaussian Mixture Model)
+%         function_gmm(ana, set, ROIs, i);
+%         %labels in SupResParams
+%         %% C2: DBSCAN
+%         function_dbscan(ana, set, ROIs, i);
+%         %labels in SupResParams
+%         %% C3: OPTICS
+%         function_optics(ana, set, ROIs, i);
+%         %labels in SupResParams
+%     end
+%     t_end = toc;
+%     disp("Localization rejection done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+% end
+% 
+% %% Time trace analysis - Post-correction
+% if set.other.time_analysis == 1
+%     tic;
+%     for i=1:set.ROI.number
+%         ana = reject_bright_dark_new(ana, i);
+%         ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i);
+%         check = determine_tf_pn(ana, i);
+%     end
+%     generate_corr_bright_dark_histograms(ana, set);
+%     ana = determine_corr_averages_and_binding_spots(ana, set);
+%     generate_corr_av_tau_plot(ana, set);
+%     t_end = toc;
+%     disp("Time trace analysis - Post-correction - done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+% end
