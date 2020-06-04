@@ -3,12 +3,13 @@ close all
 clc
 
 %% Give datasets to analyze 
-workspaces=["non05bind5.mat", "non05bind20.mat", "non05bind100.mat", "non1bind5.mat", "non1bind20.mat", "non1bind100.mat", "non10bind5.mat", "non10bind20.mat", "non10bind100.mat"];
+%workspaces=["non05bind5.mat", "non05bind20.mat", "non05bind100.mat", "non1bind5.mat", "non1bind20.mat", "non1bind100.mat", "non10bind5.mat", "non10bind20.mat", "non10bind100.mat"];
+workspaces=["Circle_bind_20_ratio_10_workspace.mat", "Circle_bind_20_ratio_0.5_workspace.mat", "Circle_bind_20_ratio_0.1_workspace.mat"];
 %workspaces=["non05bind5.mat"];
 
 %% Give minPts and EPS to use for analysis
 % minPts=20:1:70;
-% eps=0.01:0.005:   0.2;
+% eps=0.01:0.005:0.2;
 minPts=20:5:70;
 eps=0.05:0.004:0.15;
 

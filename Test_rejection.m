@@ -14,10 +14,10 @@ set=S.set;
 time_trace_data=S.time_trace_data;
 time_trace_data_non=S.time_trace_data_non;
 time_trace_data_spec=S.time_trace_data_spec;
-ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i);
 check = [];
 k=1;
 
+ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i);
 ratio_actual = ana.ROI(i).numSpecific/ana.ROI(i).numNonSpecific;
 
 %% Estimation ratio and binding sites

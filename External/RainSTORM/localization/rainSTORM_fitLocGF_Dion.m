@@ -114,7 +114,6 @@ for lpPx = 1:size(myPixels,1) % For local maxima in descending order
         SupResParams(index).frame_idx = frameIdx;
         SupResParams(index).x_coord = fitRowPos;
         SupResParams(index).y_coord = fitColPos;
-        SupResParams(index).z_coord = 0;
         SupResParams(index).I = myPixels(lpPx,3); % Averaged magnitude of this signal
         SupResParams(index).sig_x = sigX;  % X-width (sigma, rows, fitted) of this Gaussian
         SupResParams(index).sig_y = sigY;  % Y-width (sigma, cols, fitted) of this Gaussian

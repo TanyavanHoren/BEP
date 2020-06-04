@@ -34,8 +34,7 @@ set.other.visFreq = 5000; %visualization made every # frames
 set.mic.frames = 100000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
 set.obj.av_binding_spots = 20; % per object
-set.mic.laser_power = 100; %in mW
-set.para.freq_ratio = 0.5; %ratio f_specific/f_non_specific
+set.para.freq_ratio = 10; %ratio f_specific/f_non_specific
 set.ana.loc.algo_name = 'GF_Dion'; %Options: GF3, GF, CoM
 [set, SNR]  = give_inputs(set); %other inputs
 set.ana.rainSTORM_settings = create_standard_settings(set); %mimick rainSTORM settings
@@ -103,7 +102,7 @@ if set.other.time_analysis == 1
     for i=1:set.ROI.number
         ana.ROI(i).timetrace_data = spikes_analysis(time_axis, time_trace_data.ROI(i).frame(:)', i, 0, set);
     end
-    %generate_bright_dark_histograms(ana, set);
+    generate_bright_dark_histograms(ana, set);
     ana = determine_averages_and_binding_spots(ana, set);
     generate_av_tau_plot(ana, set);
     t_end = toc;
