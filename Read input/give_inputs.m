@@ -19,6 +19,7 @@ set.sample.non_on_object_chance = 0;
 set.obj.av_size_x = 0.07; %mu nanorod
 set.obj.av_size_y = 0.02; %mu nanorod
 set.obj.av_radius = 0.05; %mu spherical particle
+set.obj.std_factor_size = 0.1; %the standard deviation is factor*mean
 
 set.ROI.size = 9; %pixelwidth ROI 
 
@@ -43,4 +44,6 @@ SNR = mean/sqrt(set.bg.mu+(variance)); %estimate SNR
 
 set.ana.std_factor=5; %threshold at mu+factor*sigma
 set.ana.iterations=600; % number of iterations for solver of localizations, higher slower but better
+set.ana.loc_settings.thresh=set.bg.mu+sqrt(set.bg.mu)*set.ana.std_factor;
+set.ana.loc_settings.initSig=set.mic.wavelength/(2*set.mic.NA*sqrt(8*log(2)))/set.mic.pixelsize;
 end

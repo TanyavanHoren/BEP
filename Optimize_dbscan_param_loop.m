@@ -3,8 +3,7 @@ close all
 clc
 
 %% Give datasets to analyze 
-%workspaces=["non05bind5.mat", "non05bind20.mat", "non05bind100.mat", "non1bind5.mat", "non1bind20.mat", "non1bind100.mat", "non10bind5.mat", "non10bind20.mat", "non10bind100.mat"];
-workspaces=["Circle_bind_20_ratio_10_workspace.mat", "Circle_bind_20_ratio_0.5_workspace.mat", "Circle_bind_20_ratio_0.1_workspace.mat"];
+workspaces=["non05bind5.mat", "non05bind20.mat", "non05bind100.mat", "non1bind5.mat", "non1bind20.mat", "non1bind100.mat", "non10bind5.mat", "non10bind20.mat", "non10bind100.mat"];
 %workspaces=["non05bind5.mat"];
 
 %% Give minPts and EPS to use for analysis
@@ -56,12 +55,15 @@ for i=1:size(workspaces,2)
     zlabel('Average false positives and negatives');
     box on
 end
+
 %% Average over all datasets
 false_av_tot=zeros(size(eps,2),size(minPts,2));
 for i=1:size(workspaces,2)
     false_av_tot = false_av_tot+false_av.dataset(i).dbscan;
 end
 false_av_tot_av=false_av_tot./size(workspaces,2);
+
+%% Plot result in a surface plot
 figure
 surf(minPts, eps, false_av_tot_av);
 xlabel('minPts');

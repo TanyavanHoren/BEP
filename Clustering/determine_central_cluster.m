@@ -1,4 +1,4 @@
-function ana = determine_central_cluster(ana, gmm_var, i, k, makePlot, ROIs, set)
+function ana = determine_central_cluster(ana, gmm_var, i, makePlot, ROIs, set)
 %predefine
 x_1=0; 
 counter_1=0;
@@ -22,29 +22,16 @@ else
     gmm_var.idx_right=1;
 end
 logical = num2cell(gmm_var.idx'~=gmm_var.idx_right.*ones(1,length(ana.ROI(i).SupResParams)));
-if k==4
-    [ana.ROI(i).SupResParams.isRej_GMM1]=logical{:};
-end
-if k==5
-    [ana.ROI(i).SupResParams.isRej_GMM2]=logical{:};
-end
+[ana.ROI(i).SupResParams.isRej_GMM]=logical{:};
 
 if makePlot == 1
     figure
     scatter([ana.ROI(i).SupResParams.x_coord]',[ana.ROI(i).SupResParams.y_coord]', 1, 'r');
     hold on 
     ana.ROI(i).loc.good_x_gmm_central = [ana.ROI(i).SupResParams.x_coord]'; %copy
-    if k==4
-        ana.ROI(i).loc.good_x_gmm_central = [ana.ROI(i).loc.good_x_gmm_central([ana.ROI(i).SupResParams.isRej_GMM1]==0)]; %condition
-    elseif k==5
-        ana.ROI(i).loc.good_x_gmm_central = [ana.ROI(i).loc.good_x_gmm_central([ana.ROI(i).SupResParams.isRej_GMM2]==0)]; %condition
-    end
+    ana.ROI(i).loc.good_x_gmm_central = [ana.ROI(i).loc.good_x_gmm_central([ana.ROI(i).SupResParams.isRej_GMM]==0)]; %condition
     ana.ROI(i).loc.good_y_gmm_central = [ana.ROI(i).SupResParams.y_coord]';
-    if k==4
-        ana.ROI(i).loc.good_y_gmm_central = [ana.ROI(i).loc.good_y_gmm_central([ana.ROI(i).SupResParams.isRej_GMM1]==0)]; %condition
-    elseif k==5
-        ana.ROI(i).loc.good_y_gmm_central = [ana.ROI(i).loc.good_y_gmm_central([ana.ROI(i).SupResParams.isRej_GMM2]==0)]; %condition
-    end
+    ana.ROI(i).loc.good_y_gmm_central = [ana.ROI(i).loc.good_y_gmm_central([ana.ROI(i).SupResParams.isRej_GMM]==0)]; %condition
     scatter([ana.ROI(i).loc.good_x_gmm_central],[ana.ROI(i).loc.good_y_gmm_central], 1, 'g');
     hold on 
     plot_object_binding_spots(ROIs, set, i);

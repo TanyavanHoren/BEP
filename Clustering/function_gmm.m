@@ -1,6 +1,14 @@
 function gmm_var = function_gmm(ana, set, ROIs, i, makePlot, rej)
 
-gmm = fitgmdist([[ana.ROI(i).SupResParams.x_coord]'  [ana.ROI(i).SupResParams.y_coord]'],rej.number_gaussians); %give data, specify cluster number
+mean_matrix=zeros(rej.number_gaussians,2);
+if set.other.system_choice == 1
+    sigma_matrix(:,:,1)=[set.obj.av_radius 0; 0 set.obj.av_radius];
+elseif set.other.system_choice == 2
+    sigma_matrix(:,:,1)=[(set.obj.av_size_x+set.obj.av_size_y)/4 0; 0 (set.obj.av_size_x+set.obj.av_size_y)/4];
+end
+sigma_matrix(:,:,2)=[set.ROI.size/2 0; 0 set.ROI.size/2];
+S = struct('mu',mean_matrix,'Sigma',sigma_matrix);
+gmm = fitgmdist([[ana.ROI(i).SupResParams.x_coord]'  [ana.ROI(i).SupResParams.y_coord]'],rej.number_gaussians,'Start', S); %give data, specify cluster number
 gmm_var.idx = cluster(gmm,[[ana.ROI(i).SupResParams.x_coord]'  [ana.ROI(i).SupResParams.y_coord]']);
 if makePlot == 1
     figure

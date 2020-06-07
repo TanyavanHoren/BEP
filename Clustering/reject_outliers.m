@@ -2,12 +2,12 @@ function ana = reject_outliers(ana, i, set, ROIs, makePlot, rej)
 
 radial_distance = sqrt([ana.ROI(i).SupResParams.x_coord].^2+[ana.ROI(i).SupResParams.y_coord].^2);
 if set.other.system_choice==1
-    ana.outlier.logical = num2cell(radial_distance*set.mic.pixelsize>ones(1,length(ana.ROI(i).SupResParams)).*(set.obj.av_radius+rej.outlier_std_factor*sqrt(set.obj.av_radius*1000)/1000));
+    ana.outlier.logical = num2cell(radial_distance*set.mic.pixelsize>ones(1,length(ana.ROI(i).SupResParams)).*(set.obj.av_radius+rej.outlier_std_factor*set.obj.std_factor_size*set.obj.av_radius));
 elseif set.other.system_choice==2
     if set.obj.av_size_x>set.obj.av_size_y
-        ana.outlier.logical = num2cell(radial_distance*set.mic.pixelsize>ones(1,length(ana.ROI(i).SupResParams)).*(set.obj.av_size_x+rej.outlier_std_factor*sqrt(set.obj.av_size_x*1000)/1000));
+        ana.outlier.logical = num2cell(radial_distance*set.mic.pixelsize>ones(1,length(ana.ROI(i).SupResParams)).*(set.obj.av_size_x+rej.outlier_std_factor*set.obj.std_factor_size*set.obj.av_size_x));
     else
-        ana.outlier.logical = num2cell(radial_distance*set.mic.pixelsize>ones(1,length(ana.ROI(i).SupResParams)).*(set.obj.av_size_y+rej.outlier_std_factor*sqrt(set.obj.av_size_y*1000)/1000));
+        ana.outlier.logical = num2cell(radial_distance*set.mic.pixelsize>ones(1,length(ana.ROI(i).SupResParams)).*(set.obj.av_size_y+rej.outlier_std_factor*set.obj.std_factor_size*set.obj.av_size_y));
     end
 end
 %ana.outlier.logical = num2cell(radial_distance*set.mic.pixelsize>ones(1,length(ana.ROI(i).SupResParams)).*(set.obj.av_radius));

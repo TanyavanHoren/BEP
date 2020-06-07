@@ -3,8 +3,8 @@ function [estimation, check] = Test_rejection(S, makePlot)
 rej.outlier_std_factor=5; %outlier rejection for d>d_av+..*sqrt(d_av)
 rej.cluster_std_factor=7; %rejection clusters with number of localizations n<n_min_av-..*sqrt(n_min_av)
 rej.number_gaussians=2; %number of Gaussians fitted within GMM
-rej.dbscan_minPts=30;
-rej.dbscan_eps=0.1;
+rej.dbscan_minPts=20;
+rej.dbscan_eps=0.08;
 
 %% Load data
 ROIs=S.ROIs;
@@ -30,16 +30,12 @@ ana = reject_outliers(ana, i, set, ROIs, makePlot, rej);
 [ana, check] = event_rejection_default(ana, i, set, ROIs, makePlot, k, check);
 k=k+1;
 
-%% DBSCAN (k=2 wo error ellipse, k=3 with)
-[ana, check] = event_rejection_dbscan1(ana, i, set, ROIs, makePlot, k, check, rej);
-k=k+1;
-[ana, check] = event_rejection_dbscan2(ana, i, set, ROIs, makePlot, k, check, rej);
+%% DBSCAN (k=2)
+[ana, check] = event_rejection_dbscan(ana, i, set, ROIs, makePlot, k, check, rej);
 k=k+1;
 
-%% GMM (k=4 wo error ellipse, k=5 with)
-[ana, check] = event_rejection_gmm1(ana, i, set, ROIs, makePlot, k, check, rej);
-k=k+1;
-[~, check] = event_rejection_gmm2(ana, i, set, ROIs, makePlot, k, check, rej);
+%% GMM (k=3)
+[ana, check] = event_rejection_gmm(ana, i, set, ROIs, makePlot, k, check, rej);
 k=k+1;
 
 end

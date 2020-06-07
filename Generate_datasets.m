@@ -15,7 +15,7 @@ while 1==1
     end
 end
 addpath(genpath(folder)); %create empty folder for figures
-rainSTORM_env = startup(); %start up localization software
+env = startup(); %start up localization software
 
 %% Modus and display
 set.other.system_choice = S.set.other.system_choice; %1: spherical particle, 2: nanorod
@@ -31,9 +31,7 @@ set.mic.frames = S.set.mic.frames; %: 144E3 for a full 2h experiment with 50ms f
 set.ROI.number = S.set.ROI.number; % ROIs or objects
 set.obj.av_binding_spots = S.set.obj.av_binding_spots; % per object
 set.para.freq_ratio = S.set.para.freq_ratio; %ratio f_specific/f_non_specific
-set.ana.loc.algo_name = 'GF_Dion'; %Options: GF3, GF, CoM
 [set, SNR]  = give_inputs(set); %other inputs
-set.ana.rainSTORM_settings = create_standard_settings(set); %mimick rainSTORM settings
 
 %% Predefine
 frame_data = [];
@@ -85,7 +83,7 @@ end
 %% Localization
 if set.other.loc_analysis == 1
     for i=1:set.ROI.number
-        ana.ROI(i).SupResParams=rainSTORM_main(rainSTORM_env, frame_data.ROI(i).frame, set);
+        ana.ROI(i).SupResParams = Matej_inspired_fitting_by_Dion(frame_data.ROI(i).frame, set);
         ana = succes_rate_loc(ana, i);
         ana = position_correction(ana, set, i);
     end

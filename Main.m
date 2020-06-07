@@ -17,12 +17,11 @@ while 1==1
     end
 end
 addpath(genpath(folder)); %create empty folder for figures
-rainSTORM_env = startup(); %start up localization software
+env = startup(); %start up localization software
 
 %% Modus and display
 tic;
-set.other.system_choice = 2; %1: spherical particle, 2: nanorod
-set.other.save_mode = 1; %1: matrices, 2: tiffs
+set.other.system_choice = 1; %1: spherical particle, 2: nanorod
 set.other.timetrace_on = 1; %0: do not create timetrace, 1: do create
 set.other.loc_analysis = 1; %0: no localization analysis, 1: do analyze 
 set.other.time_analysis = 1; %0: no time trace analysis, 1: do analyze
@@ -35,9 +34,7 @@ set.mic.frames = 100000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
 set.obj.av_binding_spots = 20; % per object
 set.para.freq_ratio = 10; %ratio f_specific/f_non_specific
-set.ana.loc.algo_name = 'GF_Dion'; %Options: GF3, GF, CoM
 [set, SNR]  = give_inputs(set); %other inputs
-set.ana.rainSTORM_settings = create_standard_settings(set); %mimick rainSTORM settings
 
 %% Predefine
 frame_data = [];
@@ -79,11 +76,7 @@ for i=1:set.ROI.number
             end
             time_trace_data.ROI(i).frame(n_frame(i)) = sum(frame, 'all');
         end
-        if set.other.save_mode == 1
-            frame_data.ROI(i).frame(:,:,n_frame(i))=frame;
-        else
-            imwrite(frame, strcat('Figures\ROI',num2str(i)','frame',num2str(n_frame(i)),'.tif'));
-        end
+        frame_data.ROI(i).frame(:,:,n_frame(i))=frame;
         if mod(n_frame(i),set.other.visFreq) == 0
             imagesc([1:size(frame,2)], [1:size(frame,1)], frame, set.other.clims);
             title(["Frame: " num2str(n_frame(i)), "ROI: " num2str(i)])
@@ -102,9 +95,9 @@ if set.other.time_analysis == 1
     for i=1:set.ROI.number
         ana.ROI(i).timetrace_data = spikes_analysis(time_axis, time_trace_data.ROI(i).frame(:)', i, 0, set);
     end
-    generate_bright_dark_histograms(ana, set);
+%     generate_bright_dark_histograms(ana, set);
     ana = determine_averages_and_binding_spots(ana, set);
-    generate_av_tau_plot(ana, set);
+%     generate_av_tau_plot(ana, set);
     t_end = toc;
     disp("Time trace analysis - Pre-correction - done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
@@ -113,7 +106,7 @@ end
 if set.other.loc_analysis == 1
     tic
     for i=1:set.ROI.number
-        ana.ROI(i).SupResParams=rainSTORM_main(rainSTORM_env, frame_data.ROI(i).frame, set);
+        ana.ROI(i).SupResParams = Matej_inspired_fitting_by_Dion(frame_data.ROI(i).frame, set);
         ana = succes_rate_loc(ana, i);
         ana = position_correction(ana, set, i);
     end

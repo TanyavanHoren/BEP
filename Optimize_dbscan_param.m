@@ -22,7 +22,7 @@ k=2;
 ana = reject_outliers(ana, i, set, ROIs, makePlot, rej);
 
 %% DBSCAN, k=2: wo error ellipse
-[ana, check] = event_rejection_dbscan1(ana, i, set, ROIs, makePlot, k, check, rej);
+[ana, check] = event_rejection_dbscan(ana, i, set, ROIs, makePlot, k, check, rej);
 k=k+1;
 
 end
