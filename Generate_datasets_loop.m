@@ -8,7 +8,7 @@ if generate_new_data.circle==1
             S.set.obj.av_binding_spots=av_binding_spots(m);
             S.set.para.freq_ratio=freq_ratio(n);
             [ana, i, ROIs, set, time_trace_data, time_trace_data_non, time_trace_data_spec] = Generate_datasets(S);
-            filename = strcat('Test cases\Circle_bind_',num2str(av_binding_spots(m)),'_ratio_',num2str(freq_ratio(n)),'_workspace.mat');
+            filename = strcat('C:\Users\20174314\Dropbox\_Y3Q4\BEP\BEP Dropbox\Code\Test cases\Circle_bind_',num2str(av_binding_spots(m)),'_ratio_',num2str(freq_ratio(n)),'_workspace.mat');
             save(filename);
         end
     end
@@ -28,7 +28,7 @@ if generate_new_data.rectangle==1
             S.set.obj.av_binding_spots=av_binding_spots(m);
             S.set.para.freq_ratio=freq_ratio(n);
             [ana, i, ROIs, set, time_trace_data, time_trace_data_non, time_trace_data_spec] = Generate_datasets(S);
-            filename = strcat('Test cases\Rectangle_bind_',num2str(av_binding_spots(m)),'_ratio_',num2str(freq_ratio(n)),'_workspace.mat');
+            filename = strcat('C:\Users\20174314\Dropbox\_Y3Q4\BEP\BEP Dropbox\Code\Test cases\Rectangle_bind_',num2str(av_binding_spots(m)),'_ratio_',num2str(freq_ratio(n)),'_workspace.mat');
             save(filename);
         end
     end

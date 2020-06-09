@@ -17,11 +17,12 @@ time_trace_data_spec=S.time_trace_data_spec;
 check = [];
 k=1;
 
-ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i);
+ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, makePlot, set, ROIs);
 ratio_actual = ana.ROI(i).numSpecific/ana.ROI(i).numNonSpecific;
 
 %% Estimation ratio and binding sites
-estimation=estimation_sites_and_ratio(ana,set,i);
+estimation = estimation_sites_and_ratio(ana,set,i);
+set = determination_loc_precision(set);
 
 %% Outlier rejection
 ana = reject_outliers(ana, i, set, ROIs, makePlot, rej);

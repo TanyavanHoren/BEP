@@ -4,30 +4,29 @@ clc
 
 %% Settings
 generate_new_data.circle = 0; %0: no new data generation, 1: new data generation
-generate_new_data.rectangle = 1; %0: no new data generation, 1: new data generation
-S.set.other.visFreq = inf; %visualization made every # frames
+generate_new_data.rectangle = 0; %0: no new data generation, 1: new data generation
 S.set.ROI.number = 6; %number of ROIs/datasets with identical settings
 S.set.mic.frames = 100000; %: 144E3 for a full 2h experiment with 50ms frames
+
 av_binding_spots = [5 10 20 50 100]; % per object
 freq_ratio = [0.1 0.5 1 5 10]; %ratio f_specific/f_non_specific
 
-optimize_dbscan = 0; %0: do not run optimalization, 1: do run optimalization
-%optimization_minPts=20:5:70; %range of minPts tested in optimization
-%optimization_eps=0.05:0.004:0.15; %range of eps tested in optimization
-optimization_minPts=20:20:60; %range of minPts tested in optimization
-optimization_eps=0.05:0.05:0.15; %range of eps tested in optimization
+optimize_dbscan.circle = 0; %0: do not run optimalization, 1: do run optimalization
+optimize_dbscan.rectangle = 0; %0: do not run optimalization, 1: do run optimalization
+optimization_minPts=5:5:50; %range of minPts tested in optimization
+optimization_eps=0.05:0.01:0.25; %range of eps tested in optimization
 av_binding_spots_optimization = [5 10 20 50 100]; % per object -> these values were used for optimization
 freq_ratio_optimization = [0.1 0.5 1 5 10]; %ratio f_specific/f_non_specific -> these values were used for optimization
 
-test_rejection.circle = 0; %0: do not test rejection, 1: do test rejection
-test_rejection.rectangle = 0; %0: do not test rejection, 1: do test rejection
-makePlot = 1; %0: do not make plots of rejection processes, 1: do make plots
+test_rejection.circle = 1; %0: do not test rejection, 1: do test rejection
+test_rejection.rectangle = 1; %0: do not test rejection, 1: do test rejection
+makePlot = 0; %0: do not make plots of rejection processes, 1: do make plots
 
 %% Data generation (if necessary)
 [filenames_circle, filenames_rectangle] = Generate_datasets_loop(S,av_binding_spots,freq_ratio, generate_new_data);
 
 %% Optimization dbscan (should in principle only be done once) - circle
-if optimize_dbscan == 1
+if optimize_dbscan.circle == 1
     workspaces=filenames_circle;
     [opt.circle.false_pos, opt.circle.false_neg, opt.circle.false_av, opt.circle.minima] = Optimize_dbscan_loop(workspaces, optimization_minPts, optimization_eps);
     optimization_dbscan = create_lookup_table_dbscan(av_binding_spots,freq_ratio,opt);
@@ -46,14 +45,14 @@ end
 % to_be_used_minPts=optimization_dbscan.minPts(id_bind,id_ratio);
 
 %% Optimization dbscan (should in principle only be done once) - rectangle
-% if optimize_dbscan == 1
-%     workspaces=filenames_rectangle;
-%     [opt.rectangle.false_pos, opt.rectangle.false_neg, opt.rectangle.false_av, opt.rectangle.minima] = Optimize_dbscan_loop(workspaces, optimization_minPts, optimization_eps);
-% end
+if optimize_dbscan.rectangle == 1
+    workspaces=filenames_rectangle;
+    [opt.rectangle.false_pos, opt.rectangle.false_neg, opt.rectangle.false_av, opt.rectangle.minima] = Optimize_dbscan_loop(workspaces, optimization_minPts, optimization_eps);
+end
 
 %% Test rejection - circle
 if test_rejection.circle==1
-    for m=1 %:size(av_binding_spots,2)
+    for m=1:size(av_binding_spots,2)
         workspaces=filenames_circle(1+(m-1)*size(freq_ratio,2):m*size(freq_ratio,2));
         [circle_series(m).false_positives, circle_series(m).false_negatives, circle_series(m).false_overall] = Test_rejection_loop(makePlot, workspaces, av_binding_spots, freq_ratio, m);
     end
@@ -68,6 +67,6 @@ if test_rejection.rectangle==1
 end
 
 %% Update if necessary
-if optimize_dbscan == 1
+if optimize_dbscan.circle == 1 || optimize_dbscan.rectangle == 1
     disp('Update current freq_ratio_optimization and av_binding_spots_optimization values!')
 end

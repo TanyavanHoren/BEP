@@ -3,7 +3,7 @@ function [set, SNR]  = give_inputs(set)
 set.mic.dt = 300E-3; %s
 set.mic.pixelsize = 0.117; %mu
 set.mic.t_end = set.mic.dt*set.mic.frames; %s
-set.mic.NA = 1.2; %numerical aperature
+set.mic.NA = 1.4; %numerical aperature
 set.mic.wavelength = 0.637; %mu
 set.mic.laser_power = 100; %in mW
 
@@ -43,7 +43,6 @@ variance = exp(2*set.intensity.mu+set.intensity.std^2)*exp(set.intensity.std^2-1
 SNR = mean/sqrt(set.bg.mu+(variance)); %estimate SNR
 
 set.ana.std_factor=5; %threshold at mu+factor*sigma
-set.ana.iterations=600; % number of iterations for solver of localizations, higher slower but better
 set.ana.loc_settings.thresh=set.bg.mu+sqrt(set.bg.mu)*set.ana.std_factor;
 set.ana.loc_settings.initSig=set.mic.wavelength/(2*set.mic.NA*sqrt(8*log(2)))/set.mic.pixelsize;
 end

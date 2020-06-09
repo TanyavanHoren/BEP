@@ -32,7 +32,7 @@ set.other.visFreq = 5000; %visualization made every # frames
 %ROI; ROI(i): general, obj=object, sites, frames
 set.mic.frames = 100000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
-set.obj.av_binding_spots = 20; % per object
+set.obj.av_binding_spots = 5; % per object
 set.para.freq_ratio = 10; %ratio f_specific/f_non_specific
 [set, SNR]  = give_inputs(set); %other inputs
 
@@ -114,6 +114,19 @@ if set.other.loc_analysis == 1
     disp("Localization done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
 
+%% Show localizations 
+figure
+scatter([ana.ROI(i).SupResParams.x_coord]',[ana.ROI(i).SupResParams.y_coord]', 1, 'b');
+hold on
+plot_object_binding_spots(ROIs, set, i);
+xlabel('x-position (pixels)')
+xlim([-(set.ROI.size-1)/4 (set.ROI.size-1)/4])
+ylabel('y-position (pixels)')
+ylim([-(set.ROI.size-1)/4 (set.ROI.size-1)/4])
+box on
+box on
+
+%% Not in use
 % %% Localization rejection
 % if set.other.loc_analysis == 1
 %     tic

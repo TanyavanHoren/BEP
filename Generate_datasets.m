@@ -22,7 +22,6 @@ set.other.system_choice = S.set.other.system_choice; %1: spherical particle, 2: 
 set.other.timetrace_on = 1; %0: do not create timetrace, 1: do create
 set.other.loc_analysis = 1; %0: no localization analysis, 1: do analyze 
 set.other.time_analysis = 1; %0: no time trace analysis, 1: do analyze
-set.other.visFreq = S.set.other.visFreq; %visualization made every # frames
 
 %% Read input
 %set=settings; sample, mic=microscope, objects, para=parameters, bg=background, intensity, other

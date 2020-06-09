@@ -8,6 +8,9 @@ elseif set.other.system_choice==2
     ROIs.ROI(i).object_orientation=rand()*pi; %rad
 end
 ROIs.ROI(i).object_number_bind=poissrnd(set.obj.av_binding_spots);
+while ROIs.ROI(i).object_number_bind == 0 %in reality, we would also exclude objects without events
+    ROIs.ROI(i).object_number_bind=poissrnd(set.obj.av_binding_spots);
+end
 ROIs.ROI(i).non_specific.period=set.para.freq_ratio*(set.sample.td+set.sample.tb)/ROIs.ROI(i).object_number_bind;
 ROIs.ROI(i).non_specific.t_start=exprnd(ROIs.ROI(i).non_specific.period);
 ROIs.ROI(i).non_specific.number=0;
