@@ -11,7 +11,11 @@ if any(frame_to_process > thresh,'all')
     pixel_intensity = frame_to_process(ceil(PositionX),ceil(PositionY));
     myROI_bg = mean(frame_to_process(frame_to_process < mean(frame_to_process)));
     gausInit = double([myROI_bg, pixel_intensity, PositionX, initSig, PositionY]);
-    [result, ~, residual, ~, its] = lsqGauss(gausInit,frame_to_process,size(frame_to_process,2));
+    [result, ~, residual, exitFlag, its] = lsqGauss(gausInit,frame_to_process,size(frame_to_process,2));
+    if exitFlag < 1
+        SupResParams = [];
+        return
+    end
     SupResParams(index).frame_idx = frame_number;
     SupResParams(index).x_coord = result(5);
     SupResParams(index).y_coord = result(3);

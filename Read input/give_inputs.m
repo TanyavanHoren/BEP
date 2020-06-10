@@ -7,7 +7,7 @@ set.mic.NA = 1.4; %numerical aperature
 set.mic.wavelength = 0.637; %mu
 set.mic.laser_power = 100; %in mW
 
-set.sample.k_off = 0.33; %s^-1
+set.sample.k_off = 1.6; %s^-1
 set.sample.k_on = 2.3E6; %M^-1s^-1
 set.sample.concentration = set.sample.k_off/(set.sample.k_on*20*set.obj.av_binding_spots); %in M
 set.sample.tb = 1/set.sample.k_off; %s
@@ -31,7 +31,7 @@ set.other.clims = [0 2000]; %fix colourscale visualization
 set.para.bg.A = 400; %camera baseline
 set.para.bg.B = 0.51E9; %M^-1mW^-1
 set.para.bg.C = 0.79; %mW^-1
-set.bg.mu = set.para.bg.A+(set.para.bg.B*set.sample.concentration+set.para.bg.C)*set.mic.laser_power;
+set.bg.mu = set.para.bg.A;%+(set.para.bg.B*set.sample.concentration+set.para.bg.C)*set.mic.laser_power;
 %Peak intensity: lognrnd(mu, B)
 %mu = A*laserpower
 set.para.intensity.A=0.055; %mW^-1 

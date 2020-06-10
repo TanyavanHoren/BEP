@@ -3,10 +3,10 @@ close all
 clc
 
 %% Settings
-generate_new_data.circle = 0; %0: no new data generation, 1: new data generation
-generate_new_data.rectangle = 0; %0: no new data generation, 1: new data generation
-S.set.ROI.number = 6; %number of ROIs/datasets with identical settings
-S.set.mic.frames = 100000; %: 144E3 for a full 2h experiment with 50ms frames
+generate_new_data.circle = 1; %0: no new data generation, 1: new data generation
+generate_new_data.rectangle = 1; %0: no new data generation, 1: new data generation
+S.set.ROI.number = 3; %number of ROIs/datasets with identical settings
+S.set.mic.frames = 10000; %: 144E3 for a full 2h experiment with 50ms frames
 
 av_binding_spots = [5 10 20 50 100]; % per object
 freq_ratio = [0.1 0.5 1 5 10]; %ratio f_specific/f_non_specific
@@ -18,8 +18,8 @@ optimization_eps=0.05:0.01:0.25; %range of eps tested in optimization
 av_binding_spots_optimization = [5 10 20 50 100]; % per object -> these values were used for optimization
 freq_ratio_optimization = [0.1 0.5 1 5 10]; %ratio f_specific/f_non_specific -> these values were used for optimization
 
-test_rejection.circle = 1; %0: do not test rejection, 1: do test rejection
-test_rejection.rectangle = 1; %0: do not test rejection, 1: do test rejection
+test_rejection.circle = 0; %0: do not test rejection, 1: do test rejection
+test_rejection.rectangle = 0; %0: do not test rejection, 1: do test rejection
 makePlot = 0; %0: do not make plots of rejection processes, 1: do make plots
 
 %% Data generation (if necessary)

@@ -1,4 +1,4 @@
-function time_trace_data_spec = create_spec_tt(ROIs, i, n_frame, time_trace_data_spec)
+function counter = create_spec_tt(ROIs, i)
 
 counter = 0;
 for j=1:ROIs.ROI(i).object_number_bind
@@ -6,7 +6,6 @@ for j=1:ROIs.ROI(i).object_number_bind
         counter = counter+1;
     end  
 end
-time_trace_data_spec.ROI(i).frame(n_frame(i)) = counter;
 end
 
  

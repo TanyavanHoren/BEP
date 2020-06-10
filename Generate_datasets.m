@@ -31,6 +31,7 @@ set.ROI.number = S.set.ROI.number; % ROIs or objects
 set.obj.av_binding_spots = S.set.obj.av_binding_spots; % per object
 set.para.freq_ratio = S.set.para.freq_ratio; %ratio f_specific/f_non_specific
 [set, SNR]  = give_inputs(set); %other inputs
+set = determination_loc_precision(set);
 
 %% Predefine
 frame_data = [];

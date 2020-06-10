@@ -22,7 +22,6 @@ ratio_actual = ana.ROI(i).numSpecific/ana.ROI(i).numNonSpecific;
 
 %% Estimation ratio and binding sites
 estimation = estimation_sites_and_ratio(ana,set,i);
-set = determination_loc_precision(set);
 
 %% Outlier rejection
 ana = reject_outliers(ana, i, set, ROIs, makePlot, rej);

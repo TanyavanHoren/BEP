@@ -1,14 +1,18 @@
 function ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, makePlot, set, ROIs)
 
-non_spec_log = false(1,size(ana.ROI(i).SupResParams,2));
+non_spec_log = int16(zeros(1,size(ana.ROI(i).SupResParams,2)));
 for j=1:size(ana.ROI(i).SupResParams,2)
-    if time_trace_data_non.ROI(i).frame(ana.ROI(i).SupResParams(j).frame_idx) == 0 && time_trace_data_spec.ROI(i).frame(ana.ROI(i).SupResParams(j).frame_idx) ~= 0
+    frame_idx = ana.ROI(i).SupResParams(j).frame_idx;
+    n_non = time_trace_data_non.ROI(i).frame(frame_idx);
+    n_spec = time_trace_data_spec.ROI(i).frame(frame_idx);
+    
+    if n_non == 0 && n_spec > 0
         non_spec_log(j)=0;
-    elseif time_trace_data_non.ROI(i).frame(ana.ROI(i).SupResParams(j).frame_idx) ~= 0 && time_trace_data_spec.ROI(i).frame(ana.ROI(i).SupResParams(j).frame_idx) == 0
+    elseif n_non > 0 && n_spec == 0
         non_spec_log(j)=1;
-    elseif time_trace_data_non.ROI(i).frame(ana.ROI(i).SupResParams(j).frame_idx) ~= 0 && time_trace_data_spec.ROI(i).frame(ana.ROI(i).SupResParams(j).frame_idx) ~= 0
+    elseif n_non > 0 && n_spec > 0
         non_spec_log(j)=2;
-    elseif time_trace_data_non.ROI(i).frame(ana.ROI(i).SupResParams(j).frame_idx) == 0 && time_trace_data_spec.ROI(i).frame(ana.ROI(i).SupResParams(j).frame_idx) == 0
+    elseif n_non == 0 && n_spec == 0
         non_spec_log(j)=3;
     end
 end

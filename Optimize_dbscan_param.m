@@ -15,7 +15,6 @@ time_trace_data=S.time_trace_data;
 time_trace_data_non=S.time_trace_data_non;
 time_trace_data_spec=S.time_trace_data_spec;
 ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, makePlot, set, ROIs);
-set = determination_loc_precision(set);
 check = [];
 k=2;
 

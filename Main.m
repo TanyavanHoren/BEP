@@ -25,12 +25,12 @@ set.other.system_choice = 1; %1: spherical particle, 2: nanorod
 set.other.timetrace_on = 1; %0: do not create timetrace, 1: do create
 set.other.loc_analysis = 1; %0: no localization analysis, 1: do analyze 
 set.other.time_analysis = 1; %0: no time trace analysis, 1: do analyze
-set.other.visFreq = 5000; %visualization made every # frames
+set.other.visFreq = 500; %visualization made every # frames
 
 %% Read input
 %set=settings; sample, mic=microscope, objects, para=parameters, bg=background, intensity, other
 %ROI; ROI(i): general, obj=object, sites, frames
-set.mic.frames = 100000; %: 144E3 for a full 2h experiment with 50ms frames
+set.mic.frames = 10000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
 set.obj.av_binding_spots = 5; % per object
 set.para.freq_ratio = 10; %ratio f_specific/f_non_specific
@@ -65,7 +65,7 @@ for i=1:set.ROI.number
         frame = frame_data.ROI(i).frame(:,:,n_frame(i));
         ROIs = generate_binding_events(ROIs, set, t, i);
         frame = generate_specific_binding_intensity(ROIs, set, frame, i);
-        time_trace_data_spec = create_spec_tt(ROIs, i, n_frame, time_trace_data_spec);
+        time_trace_data_spec.ROI(i).frame(n_frame(i)) = create_spec_tt(ROIs, i);
         ROIs = generate_non_specific_events(ROIs, set, t, i);
         frame = add_intensity_non_specific(ROIs, set, frame, i);
         time_trace_data_non = create_non_tt(ROIs, i, n_frame, time_trace_data_non);
@@ -115,16 +115,27 @@ if set.other.loc_analysis == 1
 end
 
 %% Show localizations 
-figure
-scatter([ana.ROI(i).SupResParams.x_coord]',[ana.ROI(i).SupResParams.y_coord]', 1, 'b');
+ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, 1, set, ROIs);
+median_x=median([ana.ROI(i).SupResParams.x_coord]);
+median_y=median([ana.ROI(i).SupResParams.y_coord]);
 hold on
-plot_object_binding_spots(ROIs, set, i);
-xlabel('x-position (pixels)')
-xlim([-(set.ROI.size-1)/4 (set.ROI.size-1)/4])
-ylabel('y-position (pixels)')
-ylim([-(set.ROI.size-1)/4 (set.ROI.size-1)/4])
-box on
-box on
+scatter(median_x,median_y,'*')
+viscircles([median_x median_y], 3*ROIs.ROI(i).object_radius/set.mic.pixelsize, 'LineWidth', 0.5, 'Color', 'Cyan')
+
+%%
+figure
+x=[ana.ROI(i).SupResParams.x_coord]';
+y=[ana.ROI(i).SupResParams.y_coord]';
+% [v,c] = voronoin([x y]) ;
+figure
+[vx, vy]=voronoi(x,y);
+% A = zeros(length(c),1) ;
+% for j = 1:length(c)
+%     v1 = v(c{j},1) ; 
+%     v2 = v(c{j},2) ;
+%     patch(v1,v2,rand(1,3))
+%     A(j) = polyarea(v1,v2) ;
+% end
 
 %% Not in use
 % %% Localization rejection
