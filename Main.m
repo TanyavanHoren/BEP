@@ -33,8 +33,9 @@ set.other.visFreq = 500; %visualization made every # frames
 set.mic.frames = 10000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
 set.obj.av_binding_spots = 5; % per object
-set.para.freq_ratio = 10; %ratio f_specific/f_non_specific
+set.para.freq_ratio = 3; %ratio f_specific/f_non_specific
 [set, SNR]  = give_inputs(set); %other inputs
+set = determination_loc_precision(set);
 
 %% Predefine
 frame_data = [];
@@ -106,6 +107,7 @@ end
 if set.other.loc_analysis == 1
     tic
     for i=1:set.ROI.number
+        ana = merge_events(set,ana,i,frame_data);
         ana.ROI(i).SupResParams = Matej_inspired_fitting_by_Dion(frame_data.ROI(i).frame, set);
         ana = succes_rate_loc(ana, i);
         ana = position_correction(ana, set, i);
@@ -114,53 +116,16 @@ if set.other.loc_analysis == 1
     disp("Localization done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
 
-%% Show localizations 
+%% Show localizations - alternate outlier rejection 
 ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, 1, set, ROIs);
-median_x=median([ana.ROI(i).SupResParams.x_coord]);
-median_y=median([ana.ROI(i).SupResParams.y_coord]);
-hold on
-scatter(median_x,median_y,'*')
-viscircles([median_x median_y], 3*ROIs.ROI(i).object_radius/set.mic.pixelsize, 'LineWidth', 0.5, 'Color', 'Cyan')
 
-%%
-figure
-x=[ana.ROI(i).SupResParams.x_coord]';
-y=[ana.ROI(i).SupResParams.y_coord]';
-% [v,c] = voronoin([x y]) ;
-figure
-[vx, vy]=voronoi(x,y);
-% A = zeros(length(c),1) ;
-% for j = 1:length(c)
-%     v1 = v(c{j},1) ; 
-%     v2 = v(c{j},2) ;
-%     patch(v1,v2,rand(1,3))
-%     A(j) = polyarea(v1,v2) ;
+%% Vonoroi analysis 
+% for i=1:set.ROI.number
+%     voronoi_var = create_voronoi_diagram(ana,i,set);
+%     voronoi_var = determine_loc_densities(voronoi_var,i);
 % end
 
 %% Not in use
-% %% Localization rejection
-% if set.other.loc_analysis == 1
-%     tic
-%     for i=1:set.ROI.number
-%         %% G: Geometry-based
-%         %% G1: (Error Ellipse)
-%         ana = reject_outliers(ana, i, set, ROIs);
-%         ana = reject_outside_ellipse(ana,i, set, ROIs);
-%         %% C: Cluster-based
-%         %% C1: GMM (Gaussian Mixture Model)
-%         function_gmm(ana, set, ROIs, i);
-%         %labels in SupResParams
-%         %% C2: DBSCAN
-%         function_dbscan(ana, set, ROIs, i);
-%         %labels in SupResParams
-%         %% C3: OPTICS
-%         function_optics(ana, set, ROIs, i);
-%         %labels in SupResParams
-%     end
-%     t_end = toc;
-%     disp("Localization rejection done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
-% end
-% 
 % %% Time trace analysis - Post-correction
 % if set.other.time_analysis == 1
 %     tic;

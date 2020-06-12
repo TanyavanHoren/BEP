@@ -1,10 +1,10 @@
 function [estimation, check] = Test_rejection(S, makePlot)
 %% Parameters
-rej.outlier_std_factor=5; %outlier rejection for d>d_av+..*sqrt(d_av)
+rej.outlier_factor=3; %outlier rejection for d>d_av+..*sqrt(d_av)
 rej.cluster_std_factor=7; %rejection clusters with number of localizations n<n_min_av-..*sqrt(n_min_av)
 rej.number_gaussians=2; %number of Gaussians fitted within GMM
-rej.dbscan_minPts=20;
-rej.dbscan_eps=0.08;
+rej.dbscan_minPts=10;
+rej.dbscan_eps=0.2;
 
 %% Load data
 ROIs=S.ROIs;
@@ -21,7 +21,7 @@ ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, 
 ratio_actual = ana.ROI(i).numSpecific/ana.ROI(i).numNonSpecific;
 
 %% Estimation ratio and binding sites
-estimation = estimation_sites_and_ratio(ana,set,i);
+estimation = estimation_sites_and_ratio(ana,set,i,rej);
 
 %% Outlier rejection
 ana = reject_outliers(ana, i, set, ROIs, makePlot, rej);
