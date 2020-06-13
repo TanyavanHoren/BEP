@@ -31,6 +31,7 @@ end
 set.other.visFreq = 100; %once every N frames, visualization is done
 
 %% Read input
+<<<<<<< Updated upstream
 %set=settings; sample, mic=microscope, laser, other
 %obj=objects; gen=general, object=object, non=non-specific
 %ana=analyisis; ROI, other
@@ -43,6 +44,16 @@ set.laser.focus = [0;0]; %[x;y] in mu counted from center
 set.laser.power = 100; %in mW
 set.laser.width = Inf; %FWHM in mu (Inf if homogeneous)
 [set, n_frame, obj, ana]  = give_inputs(set, obj); %other inputs
+=======
+%set=settings; sample, mic=microscope, objects, para=parameters, bg=background, intensity, other
+%ROI; ROI(i): general, obj=object, sites, frames
+set.mic.frames = 10000; %: 144E3 for a full 2h experiment with 50ms frames
+set.ROI.number = 1; % ROIs or objects
+set.obj.av_binding_spots = 5; % per object
+set.para.freq_ratio = 1; %ratio f_specific/f_non_specific
+[set, SNR]  = give_inputs(set); %other inputs
+set = determination_loc_precision(set);
+>>>>>>> Stashed changes
 
 %% Predefine
 frame_data = [];
@@ -81,12 +92,40 @@ end
 
 t_end = toc;
 disp("Generate data done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+<<<<<<< Updated upstream
 %% General processing
 tic;
 if set.other.ROI_mode == 2
     [ana, res] = processing_ROI_mode_2(ana, set, obj, frame_data);
 elseif set.other.ROI_mode ~= 2
     [ana, res] = processing_ROI_mode_other(ana, set, obj);
+=======
+
+%% Time trace analysis - Pre-correction
+if set.other.time_analysis == 1
+    tic;
+    generate_time_traces(time_trace_data, set);
+    for i=1:set.ROI.number
+        ana.ROI(i).timetrace_data = spikes_analysis(time_axis, time_trace_data.ROI(i).frame(:)', i, 0, set);
+    end
+%     generate_bright_dark_histograms(ana, set);
+    ana = determine_averages_and_binding_spots(ana, set);
+%     generate_av_tau_plot(ana, set);
+    t_end = toc;
+    disp("Time trace analysis - Pre-correction - done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+end
+
+%% Localization
+if set.other.loc_analysis == 1
+    tic
+    for i=1:set.ROI.number
+        merged_frame_data = merge_events(ana,i,frame_data);
+        ana.ROI(i).SupResParams = merge_Matej_inspired_fitting_by_Dion(merged_frame_data.ROI(i).frame, set, i, ana);
+        ana = position_correction(ana, set, i);
+    end
+    t_end = toc;
+    disp("Localization done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+>>>>>>> Stashed changes
 end
 
 t_end = toc;
