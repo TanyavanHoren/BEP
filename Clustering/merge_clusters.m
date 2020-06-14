@@ -18,6 +18,7 @@ grouped_dbscan(num_per_index_dbscan<av_localizations_single_site-rej.cluster_std
 num_per_index_dbscan = grouped_dbscan(:,2);
 indices_dbscan = grouped_dbscan(:,1);
 %check for each localizations if it corresponds to one of the merged clusters
+<<<<<<< HEAD
 %if not -> outlier -> index 2 (done by building a matrix with all to be rejected values)
 data = ana.ROI(i).loc.good;
 data(ismember(dbscan_var.idx, indices_dbscan),:)=[];
@@ -26,6 +27,17 @@ for j=1:size(ana.ROI(i).SupResParams,2)
         ana.ROI(i).SupResParams(j).isRej_DBSCAN=2;
     end
 end
+=======
+%if not -> outlier -> index 1 (done by building a matrix with all to be rejected values)
+data = ana.ROI(i).loc.good;
+data(ismember(dbscan_var.idx, indices_dbscan),:)=[];
+for j=1:size(ana.ROI(i).SupResParams,2)
+    if ismember(ana.ROI(i).SupResParams(j).event_idx,data(:,1))
+        ana.ROI(i).SupResParams(j).isRej_DBSCAN=true;
+    end
+end
+
+>>>>>>> Merged-ROIs
 if makePlot == 1
     figure
     scatter([ana.ROI(i).SupResParams.x_coord]',[ana.ROI(i).SupResParams.y_coord]', 1, 'r');

@@ -8,7 +8,18 @@ elseif set.other.system_choice == 2
 end
 sigma_matrix(:,:,2)=[set.ROI.size/2 0; 0 set.ROI.size/2];
 S = struct('mu',mean_matrix,'Sigma',sigma_matrix);
+<<<<<<< HEAD
 gmm = fitgmdist([[ana.ROI(i).SupResParams.x_coord]'  [ana.ROI(i).SupResParams.y_coord]'],rej.number_gaussians,'Start', S); %give data, specify cluster number
+=======
+
+try
+    gmm = fitgmdist([[ana.ROI(i).SupResParams.x_coord]'  [ana.ROI(i).SupResParams.y_coord]'],rej.number_gaussians,'Start', S); %give data, specify cluster number
+    gmm_var.fit_failed=0;
+catch
+    gmm_var.fit_failed=1; 
+return 
+end
+>>>>>>> Merged-ROIs
 
 gmm_var.idx = cluster(gmm,[[ana.ROI(i).SupResParams.x_coord]'  [ana.ROI(i).SupResParams.y_coord]']);
 if makePlot == 1

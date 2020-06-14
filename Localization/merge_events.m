@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 function ana = merge_events(set,ana,i,frame_data)
 
 indices = zeros(1,set.mic.frames);
@@ -24,3 +25,12 @@ for j=2:size(dark_indices,2)
         end
     end
 end
+=======
+function merged_frame_data = merge_events(ana,i,frame_data)
+
+for j=1:size(ana.ROI(i).timetrace_data.ontime,2)
+    logical = ana.ROI(i).timetrace_data.labeledOns==j;
+    merged_frame_data.ROI(i).frame(:,:,j)=sum(frame_data.ROI(i).frame(:,:,logical),3);
+end
+end
+>>>>>>> Merged-ROIs

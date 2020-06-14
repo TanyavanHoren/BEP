@@ -2,10 +2,17 @@ function ana = determine_category_events(ana, time_trace_data_non, time_trace_da
 
 non_spec_log = int16(zeros(1,size(ana.ROI(i).SupResParams,2)));
 for j=1:size(ana.ROI(i).SupResParams,2)
+<<<<<<< HEAD
     frame_idx = ana.ROI(i).SupResParams(j).frame_idx;
     n_non = time_trace_data_non.ROI(i).frame(frame_idx);
     n_spec = time_trace_data_spec.ROI(i).frame(frame_idx);
     
+=======
+    event_index = ana.ROI(i).SupResParams(j).event_idx;
+    indices_frames=ana.ROI(i).timetrace_data.labeledOns==event_index;
+    n_non = sum(time_trace_data_non.ROI(i).frame(indices_frames));
+    n_spec = sum(time_trace_data_spec.ROI(i).frame(indices_frames));
+>>>>>>> Merged-ROIs
     if n_non == 0 && n_spec > 0
         non_spec_log(j)=0;
     elseif n_non > 0 && n_spec == 0

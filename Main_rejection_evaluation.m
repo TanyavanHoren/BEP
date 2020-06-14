@@ -8,8 +8,14 @@ generate_new_data.rectangle = 0; %0: no new data generation, 1: new data generat
 S.set.ROI.number = 3; %number of ROIs/datasets with identical settings
 S.set.mic.frames = 10000; %: 144E3 for a full 2h experiment with 50ms frames
 
+<<<<<<< HEAD
 av_binding_spots = [5 10 20 50 100]; % per object
 freq_ratio = [1 5 10]; %ratio f_specific/f_non_specific
+=======
+%av_binding_spots = [5 10 20 50 100]; % per object
+av_binding_spots = [5 20]; % per object
+freq_ratio = [0.1 0.5 1 5 10]; %ratio f_specific/f_non_specific
+>>>>>>> Merged-ROIs
 
 optimize_dbscan.circle = 0; %0: do not run optimalization, 1: do run optimalization
 optimize_dbscan.rectangle = 0; %0: do not run optimalization, 1: do run optimalization

@@ -83,8 +83,13 @@ end
 %% Localization
 if set.other.loc_analysis == 1
     for i=1:set.ROI.number
+<<<<<<< HEAD
         ana.ROI(i).SupResParams = Matej_inspired_fitting_by_Dion(frame_data.ROI(i).frame, set);
         ana = succes_rate_loc(ana, i);
+=======
+        merged_frame_data = merge_events(ana,i,frame_data);
+        ana.ROI(i).SupResParams = merge_Matej_inspired_fitting_by_Dion(merged_frame_data.ROI(i).frame, set, i, ana);
+>>>>>>> Merged-ROIs
         ana = position_correction(ana, set, i);
     end
 end

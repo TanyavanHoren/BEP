@@ -14,13 +14,22 @@ elseif set.other.system_choice==2
 end
 [ana.ROI(i).SupResParams.isOutlier]=ana.outlier.logical{:}; 
 %'good' is anything not outlier -> these points can be used for further analysis 
+<<<<<<< HEAD
 ana.ROI(i).loc.good_frame = [ana.ROI(i).SupResParams.frame_idx]'; %copy
 ana.ROI(i).loc.good_frame = [ana.ROI(i).loc.good_frame([ana.ROI(i).SupResParams.isOutlier]==0)]; %condition
+=======
+ana.ROI(i).loc.good_event = [ana.ROI(i).SupResParams.event_idx]'; %copy
+ana.ROI(i).loc.good_event = [ana.ROI(i).loc.good_event([ana.ROI(i).SupResParams.isOutlier]==0)]; %condition
+>>>>>>> Merged-ROIs
 ana.ROI(i).loc.good_x = [ana.ROI(i).SupResParams.x_coord]'; %copy
 ana.ROI(i).loc.good_x = [ana.ROI(i).loc.good_x([ana.ROI(i).SupResParams.isOutlier]==0)]; %condition
 ana.ROI(i).loc.good_y = [ana.ROI(i).SupResParams.y_coord]';
 ana.ROI(i).loc.good_y = [ana.ROI(i).loc.good_y([ana.ROI(i).SupResParams.isOutlier]==0)];
+<<<<<<< HEAD
 ana.ROI(i).loc.good = [ana.ROI(i).loc.good_frame ana.ROI(i).loc.good_x ana.ROI(i).loc.good_y];
+=======
+ana.ROI(i).loc.good = [ana.ROI(i).loc.good_event ana.ROI(i).loc.good_x ana.ROI(i).loc.good_y];
+>>>>>>> Merged-ROIs
 if makePlot==1
     visualize_rejection_outliers(ana,i, set, ROIs, median_x, median_y)
 end

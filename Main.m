@@ -33,7 +33,7 @@ set.other.visFreq = 500; %visualization made every # frames
 set.mic.frames = 10000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
 set.obj.av_binding_spots = 5; % per object
-set.para.freq_ratio = 3; %ratio f_specific/f_non_specific
+set.para.freq_ratio = 1; %ratio f_specific/f_non_specific
 [set, SNR]  = give_inputs(set); %other inputs
 set = determination_loc_precision(set);
 
@@ -88,7 +88,6 @@ for i=1:set.ROI.number
 end
 t_end = toc;
 disp("Generate data done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
-
 %% Time trace analysis - Pre-correction
 if set.other.time_analysis == 1
     tic;
@@ -107,9 +106,8 @@ end
 if set.other.loc_analysis == 1
     tic
     for i=1:set.ROI.number
-        ana = merge_events(set,ana,i,frame_data);
-        ana.ROI(i).SupResParams = Matej_inspired_fitting_by_Dion(frame_data.ROI(i).frame, set);
-        ana = succes_rate_loc(ana, i);
+        merged_frame_data = merge_events(ana,i,frame_data);
+        ana.ROI(i).SupResParams = merge_Matej_inspired_fitting_by_Dion(merged_frame_data.ROI(i).frame, set, i, ana);
         ana = position_correction(ana, set, i);
     end
     t_end = toc;

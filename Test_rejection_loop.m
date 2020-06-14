@@ -20,8 +20,13 @@ for l=1:size(S.ROIs.ROI,2)
     end
     concat_false_positives(:,:,l) = false_positives.ROI(l).fp;
 end
+<<<<<<< HEAD
 false_positives.averages=mean(concat_false_positives,3);
 false_positives.std=std(concat_false_positives,[],3);
+=======
+false_positives.averages=nanmean(concat_false_positives,3);
+false_positives.std=nanstd(concat_false_positives,[],3);
+>>>>>>> Merged-ROIs
 
 % figure
 % b.false_positives=bar(false_positives.averages, 'grouped');
@@ -50,8 +55,13 @@ for l=1:size(S.ROIs.ROI,2)
     end
     concat_false_negatives(:,:,l) = false_negatives.ROI(l).fn;
 end
+<<<<<<< HEAD
 false_negatives.averages=mean(concat_false_negatives,3);
 false_negatives.std=std(concat_false_negatives,[],3);
+=======
+false_negatives.averages=nanmean(concat_false_negatives,3);
+false_negatives.std=nanstd(concat_false_negatives,[],3);
+>>>>>>> Merged-ROIs
 
 % figure
 % b.false_negatives=bar(false_negatives.averages, 'grouped');
@@ -72,8 +82,13 @@ false_negatives.std=std(concat_false_negatives,[],3);
 
 %% Result average false positives and negatives
 concat_false_overall=concat_false_positives+concat_false_negatives;
+<<<<<<< HEAD
 false_overall.averages=mean(concat_false_overall,3);
 false_overall.std=std(concat_false_overall,[],3);
+=======
+false_overall.averages=nanmean(concat_false_overall,3);
+false_overall.std=nanstd(concat_false_overall,[],3);
+>>>>>>> Merged-ROIs
 
 figure
 b.false_overall=bar(false_overall.averages, 'grouped');
@@ -92,5 +107,9 @@ end
 set(gca,'XtickLabel',newXticklabel);
 xlabel('Ratio specific to non-specific')
 ylabel('Relative number of overall false assigments')
+<<<<<<< HEAD
+=======
+ylim([0 0.1])
+>>>>>>> Merged-ROIs
 box on
 title(['Average overall false assignments - ',num2str(av_binding_spots(m)),' binding spots'])

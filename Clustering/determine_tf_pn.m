@@ -9,23 +9,41 @@ false_neg_log=false(1,size(ana.ROI(i).SupResParams,2));
 if k==1
     for j=1:size(ana.ROI(i).SupResParams,2)
         true_pos_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DEFAULT==0 && ana.ROI(i).SupResParams(j).isNonSpecific==0); %0(not outlier), 0(specific)
+<<<<<<< HEAD
         true_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DEFAULT~=0 && ana.ROI(i).SupResParams(j).isNonSpecific==1); %1(outlier), 1(non-specific)
         false_pos_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DEFAULT==0 && ana.ROI(i).SupResParams(j).isNonSpecific==1);%0(not outlier), 1(non-specific)
         false_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DEFAULT~=0 && ana.ROI(i).SupResParams(j).isNonSpecific==0); %1(Outlier), 0(specific)
+=======
+        true_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DEFAULT==1 && ana.ROI(i).SupResParams(j).isNonSpecific==1); %1(outlier), 1(non-specific)
+        false_pos_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DEFAULT==0 && ana.ROI(i).SupResParams(j).isNonSpecific==1);%0(not outlier), 1(non-specific)
+        false_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DEFAULT==1 && ana.ROI(i).SupResParams(j).isNonSpecific==0); %1(Outlier), 0(specific)
+>>>>>>> Merged-ROIs
     end
 elseif k==2
     for j=1:size(ana.ROI(i).SupResParams,2)
         true_pos_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DBSCAN==0 && ana.ROI(i).SupResParams(j).isNonSpecific==0); %0(not outlier), 0(specific)
+<<<<<<< HEAD
         true_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DBSCAN~=0 && ana.ROI(i).SupResParams(j).isNonSpecific==1); %1(outlier), 1(non-specific)
         false_pos_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DBSCAN==0 && ana.ROI(i).SupResParams(j).isNonSpecific==1);%0(not outlier), 1(non-specific)
         false_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DBSCAN~=0 && ana.ROI(i).SupResParams(j).isNonSpecific==0); %1(Outlier), 0(specific)
+=======
+        true_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DBSCAN==1 && ana.ROI(i).SupResParams(j).isNonSpecific==1); %1(outlier), 1(non-specific)
+        false_pos_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DBSCAN==0 && ana.ROI(i).SupResParams(j).isNonSpecific==1);%0(not outlier), 1(non-specific)
+        false_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_DBSCAN==1 && ana.ROI(i).SupResParams(j).isNonSpecific==0); %1(Outlier), 0(specific)
+>>>>>>> Merged-ROIs
     end     
 elseif k==3
     for j=1:size(ana.ROI(i).SupResParams,2)
         true_pos_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_GMM==0 && ana.ROI(i).SupResParams(j).isNonSpecific==0); %0(not outlier), 0(specific)
+<<<<<<< HEAD
         true_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_GMM~=0 && ana.ROI(i).SupResParams(j).isNonSpecific==1); %1(outlier), 1(non-specific)
         false_pos_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_GMM==0 && ana.ROI(i).SupResParams(j).isNonSpecific==1);%0(not outlier), 1(non-specific)
         false_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_GMM~=0 && ana.ROI(i).SupResParams(j).isNonSpecific==0); %1(Outlier), 0(specific)
+=======
+        true_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_GMM==1 && ana.ROI(i).SupResParams(j).isNonSpecific==1); %1(outlier), 1(non-specific)
+        false_pos_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_GMM==0 && ana.ROI(i).SupResParams(j).isNonSpecific==1);%0(not outlier), 1(non-specific)
+        false_neg_log(j)=sum(ana.ROI(i).SupResParams(j).isRej_GMM==1 && ana.ROI(i).SupResParams(j).isNonSpecific==0); %1(Outlier), 0(specific)
+>>>>>>> Merged-ROIs
     end
 end
 %save relative number of t/f p/n (to total amount of localizations)

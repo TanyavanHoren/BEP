@@ -18,7 +18,10 @@ check = [];
 k=1;
 
 ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, makePlot, set, ROIs);
+<<<<<<< HEAD
 ratio_actual = ana.ROI(i).numSpecific/ana.ROI(i).numNonSpecific;
+=======
+>>>>>>> Merged-ROIs
 
 %% Estimation ratio and binding sites
 estimation = estimation_sites_and_ratio(ana,set,i,rej);
