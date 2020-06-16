@@ -30,10 +30,10 @@ set.other.visFreq = 500; %visualization made every # frames
 %% Read input
 %set=settings; sample, mic=microscope, objects, para=parameters, bg=background, intensity, other
 %ROI; ROI(i): general, obj=object, sites, frames
-set.mic.frames = 10000; %: 144E3 for a full 2h experiment with 50ms frames
+set.mic.frames = 48000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
-set.obj.av_binding_spots = 5; % per object
-set.para.freq_ratio = 1; %ratio f_specific/f_non_specific
+set.obj.av_binding_spots = 20; % per object
+set.para.freq_ratio = 2; %ratio f_specific/f_non_specific
 [set, SNR]  = give_inputs(set); %other inputs
 set = determination_loc_precision(set);
 
@@ -128,7 +128,7 @@ ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, 
 % if set.other.time_analysis == 1
 %     tic;
 %     for i=1:set.ROI.number
-%         ana = reject_bright_dark_new(ana, i);
+%         ana = reject_bright_dark(ana, i);
 %         ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i);
 %         check = determine_tf_pn(ana, i);
 %     end
