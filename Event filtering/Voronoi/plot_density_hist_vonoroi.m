@@ -14,4 +14,9 @@ figure
 [~,edges] = histcounts(log10(voronoi_var.ROI(i).delta_norm2));
 histogram(voronoi_var.ROI(i).delta_norm2,10.^edges)
 set(gca, 'xscale','log')
+%normalization with respect to average
+figure
+[~,edges] = histcounts(log10(voronoi_var.ROI(i).delta_norm3));
+histogram(voronoi_var.ROI(i).delta_norm3,10.^edges)
+set(gca, 'xscale','log')
 end

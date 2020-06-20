@@ -52,5 +52,6 @@ av_density2=nanmean(voronoi_var.ROI(i).delta2);
 av_density=nanmean(voronoi_var.ROI(i).delta);
 voronoi_var.ROI(i).delta_norm=voronoi_var.ROI(i).delta./av_density;
 voronoi_var.ROI(i).delta_norm2=voronoi_var.ROI(i).delta./av_density2;
+voronoi_var.ROI(i).delta_norm3=voronoi_var.ROI(i).delta./(length(voronoi_var.ROI(i).cells)/81);
 plot_density_hist_vonoroi(voronoi_var,i)
 end

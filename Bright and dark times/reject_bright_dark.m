@@ -1,4 +1,4 @@
-function ana = reject_bright_dark(ana, i)
+function ana = reject_bright_dark(ana, i, k)
 
 if ana.ROI(i).timetrace_data.labeledOns(1)==0
     begin_bright=0; %at the beginning, we have a dark time
@@ -6,21 +6,32 @@ else
     begin_bright=1;
 end
 
-data = [[ana.ROI(i).SupResParams.frame_idx]' [ana.ROI(i).SupResParams.isOutlier]']; 
-data(data(:,2) == 0,:)=[]; %select frames of rejected events 
+if k==1
+    data = [[ana.ROI(i).SupResParams.event_idx]' [ana.ROI(i).SupResParams.isRej_DEFAULT]']; 
+elseif k==2
+    data = [[ana.ROI(i).SupResParams.event_idx]' [ana.ROI(i).SupResParams.isRej_DBSCAN]']; 
+elseif k==3
+    data = [[ana.ROI(i).SupResParams.event_idx]' [ana.ROI(i).SupResParams.isRej_GMM]']; 
+end
+data(data(:,2) == 0,:)=[]; %select event_idx of rejected events 
 on_time_log=false(1,length(ana.ROI(i).timetrace_data.ontime)); 
 off_time_log=false(1,length(ana.ROI(i).timetrace_data.offtime));
 [dark_new]=[];
 counter=0;
 
-for j=1:length(data)
-    bright_index = ana.ROI(i).timetrace_data.labeledOns(data(j,1)); %find # bright time
-    if bright_index == 0
-        continue
+for j=1:length(on_time_log)
+    if ismember(j,[ana.ROI(i).SupResParams.event_idx]')==0
+        on_time_log(1,j)=true;
     end
+end
+
+for j=1:length(data)
+    bright_index=data(j,1);
     on_time_log(1,bright_index)=true;
-    try
+    if bright_index-begin_bright>0
         off_time_log(1,bright_index-begin_bright)=true;
+    end
+    if bright_index+1-begin_bright<length(off_time_log)+1
         off_time_log(1,bright_index+1-begin_bright)=true;
     end
 end

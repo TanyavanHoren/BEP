@@ -33,7 +33,8 @@ set.other.visFreq = 500; %visualization made every # frames
 set.mic.frames = 48000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
 set.obj.av_binding_spots = 20; % per object
-set.para.freq_ratio = 2; %ratio f_specific/f_non_specific
+set.para.freq_ratio = 1; %ratio f_specific/f_non_specific
+set.other.fixed_bind_spots=0; %fix or not
 [set, SNR]  = give_inputs(set); %other inputs
 set = determination_loc_precision(set);
 
@@ -118,10 +119,10 @@ end
 ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, 1, set, ROIs);
 
 %% Vonoroi analysis 
-% for i=1:set.ROI.number
-%     voronoi_var = create_voronoi_diagram(ana,i,set);
-%     voronoi_var = determine_loc_densities(voronoi_var,i);
-% end
+for i=1:set.ROI.number
+    voronoi_var = create_voronoi_diagram(ana,i,set);
+    voronoi_var = determine_loc_densities(voronoi_var,i);
+end
 
 %% Not in use
 % %% Time trace analysis - Post-correction
