@@ -17,7 +17,7 @@ while 1==1
     end
 end
 addpath(genpath(folder)); %create empty folder for figures
-env = startup(); %start up localization software
+env = startup(); %start up parallel computing 
 
 %% Modus and display
 tic;
@@ -32,9 +32,9 @@ set.other.visFreq = 500; %visualization made every # frames
 %ROI; ROI(i): general, obj=object, sites, frames
 set.mic.frames = 48000; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = 1; % ROIs or objects
-set.obj.av_binding_spots = 20; % per object
-set.para.freq_ratio = 1; %ratio f_specific/f_non_specific
-set.other.fixed_bind_spots=0; %fix or not
+set.obj.av_binding_spots = 5; % per object
+set.para.freq_ratio = 10; %ratio f_specific/f_non_specific
+set.other.fixed_bind_spots=1; %fix or not
 [set, SNR]  = give_inputs(set); %other inputs
 set = determination_loc_precision(set);
 
@@ -62,7 +62,7 @@ disp("Generate ROIs done" + newline + "Time taken: " + num2str(t_end) + " second
 %% Data generation
 tic;
 for i=1:set.ROI.number
-    frame_data.ROI(i).frame = uint16(poissrnd(set.bg.mu,[set.ROI.size,set.ROI.size,set.mic.frames]));
+    frame_data.ROI(i).frame = uint16(normrnd(set.bg.mu,set.bg.std,[set.ROI.size,set.ROI.size,set.mic.frames]));
     for t = time_axis
         frame = frame_data.ROI(i).frame(:,:,n_frame(i));
         ROIs = generate_binding_events(ROIs, set, t, i);
@@ -89,16 +89,15 @@ for i=1:set.ROI.number
 end
 t_end = toc;
 disp("Generate data done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+
 %% Time trace analysis - Pre-correction
 if set.other.time_analysis == 1
     tic;
-    generate_time_traces(time_trace_data, set);
     for i=1:set.ROI.number
-        ana.ROI(i).timetrace_data = spikes_analysis(time_axis, time_trace_data.ROI(i).frame(:)', i, 0, set);
+        ana.ROI(i).timetrace_data = spikes_analysis(time_axis, time_trace_data.ROI(i).frame(:)', i, 0, set, frame_data.ROI(i).frame(:,:,:));
     end
-%     generate_bright_dark_histograms(ana, set);
+    generate_time_traces(time_trace_data, set, ana.ROI(i).timetrace_data);
     ana = determine_averages_and_binding_spots(ana, set);
-%     generate_av_tau_plot(ana, set);
     t_end = toc;
     disp("Time trace analysis - Pre-correction - done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
@@ -110,32 +109,43 @@ if set.other.loc_analysis == 1
         merged_frame_data = merge_events(ana,i,frame_data);
         ana.ROI(i).SupResParams = merge_Matej_inspired_fitting_by_Dion(merged_frame_data.ROI(i).frame, set, i, ana);
         ana = position_correction(ana, set, i);
+        ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, 1, set, ROIs);
     end
     t_end = toc;
     disp("Localization done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
 end
 
-%% Show localizations - alternate outlier rejection 
-ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, 1, set, ROIs);
-
-%% Vonoroi analysis 
-for i=1:set.ROI.number
-    voronoi_var = create_voronoi_diagram(ana,i,set);
-    voronoi_var = determine_loc_densities(voronoi_var,i);
-end
-
-%% Not in use
-% %% Time trace analysis - Post-correction
-% if set.other.time_analysis == 1
-%     tic;
-%     for i=1:set.ROI.number
-%         ana = reject_bright_dark(ana, i);
-%         ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i);
-%         check = determine_tf_pn(ana, i);
-%     end
-%     generate_corr_bright_dark_histograms(ana, set);
-%     ana = determine_corr_averages_and_binding_spots(ana, set);
-%     generate_corr_av_tau_plot(ana, set);
-%     t_end = toc;
-%     disp("Time trace analysis - Post-correction - done" + newline + "Time taken: " + num2str(t_end) + " seconds" + newline)
+%% Test area
+% for i=1:set.ROI.number
+%     voronoi_var = create_voronoi_diagram(ana,i,set);
+%     voronoi_var = determine_loc_densities(voronoi_var,i);
 % end
+% logical=voronoi_var.ROI(i).delta_norm3<1;
+% % rej.outlier_factor=1.5;
+% % ana=reject_outliers(ana, i, set, ROIs, 1, rej);
+% % outlier_log=[ana.ROI(i).SupResParams.isOutlier];
+% % for k=1:size(logical,2)
+% %     if logical(k)==0
+% %         if outlier_log(k)==1
+% %             logical(k)=1;
+% %         end
+% %     end
+% % end
+% logical=num2cell(logical);
+% [ana.ROI(i).SupResParams.isRej_Voronoi]=logical{:};
+% figure
+% scatter([ana.ROI(i).SupResParams.x_coord]',[ana.ROI(i).SupResParams.y_coord]', 1, 'r');
+% hold on
+% ana.ROI(i).loc.good_x_voronoi = [ana.ROI(i).SupResParams.x_coord]'; %copy
+% ana.ROI(i).loc.good_x_voronoi = [ana.ROI(i).loc.good_x_voronoi([ana.ROI(i).SupResParams.isRej_Voronoi]==0)]; %condition
+% ana.ROI(i).loc.good_y_voronoi = [ana.ROI(i).SupResParams.y_coord]';
+% ana.ROI(i).loc.good_y_voronoi = [ana.ROI(i).loc.good_y_voronoi([ana.ROI(i).SupResParams.isRej_Voronoi]==0)]; %condition
+% scatter([ana.ROI(i).loc.good_x_voronoi],[ana.ROI(i).loc.good_y_voronoi], 1, 'g');
+% hold on
+% plot_object_binding_spots(ROIs, set, i);
+% xlabel('x-position (pixels)')
+% ylabel('y-position (pixels)')
+% xlim([-set.ROI.size/2 set.ROI.size/2])
+% ylim([([-set.ROI.size/2 set.ROI.size/2])])
+% box on
+% title('Voronoi found clusters')

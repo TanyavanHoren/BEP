@@ -15,7 +15,7 @@ while 1==1
     end
 end
 addpath(genpath(folder)); %create empty folder for figures
-env = startup(); %start up localization software
+env = startup(); %start up parallel computing 
 
 %% Modus and display
 set.other.system_choice = S.set.other.system_choice; %1: spherical particle, 2: nanorod
@@ -52,7 +52,7 @@ end
 
 %% Data generation
 for i=1:set.ROI.number
-    frame_data.ROI(i).frame = uint16(poissrnd(set.bg.mu,[set.ROI.size,set.ROI.size,set.mic.frames]));
+    frame_data.ROI(i).frame = uint16(normrnd(set.bg.mu,set.bg.std,[set.ROI.size,set.ROI.size,set.mic.frames]));
     for t = time_axis
         frame = frame_data.ROI(i).frame(:,:,n_frame(i));
         ROIs = generate_binding_events(ROIs, set, t, i);
@@ -76,7 +76,7 @@ end
 %% Time trace analysis - Pre-correction
 if set.other.time_analysis == 1
     for i=1:set.ROI.number
-        ana.ROI(i).timetrace_data = spikes_analysis(time_axis, time_trace_data.ROI(i).frame(:)', i, 0, set);
+        ana.ROI(i).timetrace_data = spikes_analysis(time_axis, time_trace_data.ROI(i).frame(:)', i, 0, set, frame_data.ROI(i).frame(:,:,:));
     end
     ana = determine_averages_and_binding_spots(ana, set);
 end

@@ -40,7 +40,7 @@ scatter([ana.ROI(i).loc.cat1_x],[ana.ROI(i).loc.cat1_y], 1, 'r'); %non-specific
 hold on
 scatter([ana.ROI(i).loc.cat2_x],[ana.ROI(i).loc.cat2_y], 1, 'b'); %both
 hold on
-scatter([ana.ROI(i).loc.cat3_x],[ana.ROI(i).loc.cat3_y], 1, 'y'); %neither
+scatter([ana.ROI(i).loc.cat3_x],[ana.ROI(i).loc.cat3_y], 1, 'm'); %neither
 %draw actual particle shape
 hold on 
 plot_object_binding_spots(ROIs, set, i);

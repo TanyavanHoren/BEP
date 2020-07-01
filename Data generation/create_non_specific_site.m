@@ -1,7 +1,7 @@
 function site = create_non_specific_site(ROIs, i, set)
 
 site.position_x = (-set.ROI.size/2+rand()*set.ROI.size)*set.mic.pixelsize;
-site.position_y= (-set.ROI.size/2+rand()*set.ROI.size)*set.mic.pixelsize;
+site.position_y = (-set.ROI.size/2+rand()*set.ROI.size)*set.mic.pixelsize;
 if set.other.system_choice == 1
     while site.position_x^2 + site.position_y^2 < ROIs.ROI(i).object_radius^2
         if rand() > set.sample.non_on_object_chance

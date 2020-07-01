@@ -1,8 +1,9 @@
-function time_traces = generate_time_traces(time_trace_data, set)
+function time_traces = generate_time_traces(time_trace_data, set, params)
 
 for i=1:set.ROI.number
     fig = figure('visible','off');
     plot([set.mic.dt:set.mic.dt:set.mic.t_end],time_trace_data.ROI(i).frame(:)');
+    yline(params.threshold, 'r--');
     title('Intensity time trace')
     xlabel('Time (s)') 
     ylabel('Intensity (-)') %in photons

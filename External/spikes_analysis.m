@@ -1,15 +1,45 @@
-function [ params ] = spikes_analysis(time_axis, signal, number ,PlotResults, set)
+function [ params ] = spikes_analysis(time_axis, signal, number ,PlotResults, set, frames)
 
 %% initialize results
 params = struct(); 
 params.time_axis = time_axis;
 params.CorrSignal = signal;
 %% Analyze detrended signal and Thresholding based on a chosen period of time for calculating
-params.mean_signal = set.bg.mu*set.ROI.size^2;
-params.std_signal = sqrt(params.mean_signal);
-params.threshold = params.std_signal*set.ana.std_factor + params.mean_signal ;
-%% Find spikes above threshold
-params.spikes_pos = find (signal > params.threshold) ; % get positions of spikes
+params.threshold = set.bg.mu*set.ROI.size^2+set.ana.std_factor*set.bg.std*set.ROI.size; %std of sum N identical numbers is sqrt(N)*std_single
+%% Find spikes above threshold - Adjusted!!!
+params.spikes_pos = zeros(1,size(params.time_axis,2)); %predefine
+for j=1:size(params.time_axis,2) %check if signal above threshold, account for signal dropping just below threshold for few frames
+    if signal(j)>params.threshold
+       params.spikes_pos(1,j)=j;
+   end
+end
+params.spikes_log=params.spikes_pos~=0;
+for j=3:size(params.time_axis,2)-2
+    if params.spikes_log(j)==0
+        if params.spikes_pos(1,j-1)==j-1 && params.spikes_pos(1,j+1)==j+1
+            [X1,Y1] = localization_single_frame(frames(:,:,j-1), set);
+            [X2,Y2] = localization_single_frame(frames(:,:,j+1), set);
+            if abs(X2-X1)< set.ana.tolerance && abs(Y2-Y1)< set.ana.tolerance
+                params.spikes_pos(1,j)=j;
+            end
+        elseif params.spikes_pos(1,j-2)==j-2 && params.spikes_pos(1,j+1)==j+1
+            [X1,Y1] = localization_single_frame(frames(:,:,j-2), set);
+            [X2,Y2] = localization_single_frame(frames(:,:,j+1), set);
+            if abs(X2-X1)< set.ana.tolerance && abs(Y2-Y1)< set.ana.tolerance
+                params.spikes_pos(1,j)=j;
+            end
+        elseif params.spikes_pos(1,j-1)==j-1 && params.spikes_pos(1,j+2)==j+2
+            [X1,Y1] = localization_single_frame(frames(:,:,j-1), set);
+            [X2,Y2] = localization_single_frame(frames(:,:,j+2), set);
+            if abs(X2-X1)< set.ana.tolerance && abs(Y2-Y1)< set.ana.tolerance
+                params.spikes_pos(1,j)=j;
+            end
+        end
+    end
+end
+params.spikes_log=params.spikes_pos~=0;
+params.spikes_pos = params.spikes_pos(params.spikes_log); %throw away where no events
+
 params.spikes = signal(params.spikes_pos); % get intensities of spikes
 params.fre_spikes = length(params.spikes_pos)/time_axis(end) ; % mean frequency of spikes through the whole time trace
 params.spikes_only = zeros(1,length(signal));
@@ -22,7 +52,7 @@ if numel(params.spikes) <= 1 %% if there are no spikes, do nothing
     params.bg_pos = [];
     params.bg = [];   
 else
-    above_threshold = (signal > params.threshold); %
+    above_threshold = params.spikes_log; %
     [labeledOns, ~] = bwlabel(above_threshold);
     params.labeledOns = labeledOns ;
     props_ons = regionprops(labeledOns, 'Area')';

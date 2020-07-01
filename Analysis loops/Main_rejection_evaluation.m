@@ -32,11 +32,11 @@ end
 
 generate_new_data_Ndet.circle = 0; %0: no new data generation, 1: new data generation
 generate_new_data_Ndet.rectangle = 0; %0: no new data generation, 1: new data generation
-correction_binding_spots.circle = 1; %0: no correction analysis, 1: correction analysis
-correction_binding_spots.rectangle = 1; %0: no correction analysis, 1: correction analysis
+correction_binding_spots.circle = 0; %0: no correction analysis, 1: correction analysis
+correction_binding_spots.rectangle = 0; %0: no correction analysis, 1: correction analysis
 Ndet_binding_spots = [5 20 100]; %per object
 Ndet_freq_ratio = 0.5:0.5:10; %ratio f_specific/f_non_specific
-plotcolours={'r','m','g','c','k','b','y'};
+plotcolours={'b','m','g','c','k','r','y'};
 
 %% Data generation (if necessary)
 [filenames_circle, filenames_rectangle] = Generate_datasets_loop(S,av_binding_spots,freq_ratio, generate_new_data);
@@ -97,3 +97,10 @@ if correction_binding_spots.rectangle==1
         create_scatter_plot_Nbind(workspaces, Ndet_binding_spots, Ndet_freq_ratio, m, rectangle_series_Ndet,plotcolours);
     end
 end
+
+%% Check for loose file
+% m=1;
+% workspaces="Test_Noise_Fix";
+% S = load(workspaces);
+% S.i=1;
+% [~, ~, ana] = Nbind_rejection(S, 1);

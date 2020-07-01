@@ -29,8 +29,8 @@ elseif k==3
     end
 end
 %save relative number of t/f p/n (to total amount of localizations)
-check(k).true_pos=sum(true_pos_log)/ana.ROI(i).numSpecific;
-check(k).true_neg=sum(true_neg_log)/ana.ROI(i).numSpecific;
-check(k).false_pos=sum(false_pos_log)/ana.ROI(i).numSpecific;
-check(k).false_neg=sum(false_neg_log)/ana.ROI(i).numSpecific;
+check(k).true_pos=sum(true_pos_log)/(ana.ROI(i).numSpecific+ana.ROI(i).numNonSpecific);
+check(k).true_neg=sum(true_neg_log)/(ana.ROI(i).numSpecific+ana.ROI(i).numNonSpecific);
+check(k).false_pos=sum(false_pos_log)/(ana.ROI(i).numSpecific+ana.ROI(i).numNonSpecific);
+check(k).false_neg=sum(false_neg_log)/(ana.ROI(i).numSpecific+ana.ROI(i).numNonSpecific);
 end

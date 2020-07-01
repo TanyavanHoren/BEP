@@ -12,15 +12,15 @@ end
 if m==1
     figure
 end
-scatter(N_determined,Ndet_freq_ratio,50,plotcolours{m},'o')
+plot(N_determined,Ndet_freq_ratio,strcat(plotcolours{m},'-o'))
 hold on
-scatter([Ndet(m).dataset.Nbind_corr],Ndet_freq_ratio,50,plotcolours{m},'+')
+plot([Ndet(m).dataset.Nbind_corr],Ndet_freq_ratio,strcat(plotcolours{m},'-+'))
 hold on 
-scatter(ones(1,size(Ndet_freq_ratio,2))*Ndet_binding_spots(m),Ndet_freq_ratio,50,plotcolours{m},'*')
+plot(ones(1,size(Ndet_freq_ratio,2))*Ndet_binding_spots(m),Ndet_freq_ratio,strcat(plotcolours{m},'-*'))
 hold on
 xlim([0 inf]);
 set(gca, 'XScale', 'log')
-ylim([0 inf]);
+ylim([Ndet_freq_ratio(1) inf]);
 xlabel('Number of determined binding sites')
 ylabel('Ratio specific to non-specific')
 box on

@@ -1,6 +1,6 @@
 function [set, SNR]  = give_inputs(set)
 
-set.mic.dt = 50E-3; %s
+set.mic.dt = 50E-3;% 
 set.mic.pixelsize = 0.117; %mu
 set.mic.t_end = set.mic.dt*set.mic.frames; %s
 set.mic.NA = 1.4; %numerical aperature
@@ -24,25 +24,30 @@ set.obj.std_factor_size = 0.1; %the standard deviation is factor*mean
 set.ROI.size = 9; %pixelwidth ROI 
 
 set.other.t_shuffle = 1000*(set.sample.tb+set.sample.td);
-set.other.clims = [0 2000]; %fix colourscale visualization
+set.other.clims = [0 0.5E5]; %fix colourscale visualization
 
-%Background (per pixel): poissrnd(mu)
-%mu=A+(B*concentration+C)*laserpower
-set.para.bg.A = 400; %camera baseline
-set.para.bg.B = 0.51E9; %M^-1mW^-1
-set.para.bg.C = 0.79; %mW^-1
-set.bg.mu = set.para.bg.A;%+(set.para.bg.B*set.sample.concentration+set.para.bg.C)*set.mic.laser_power;
+%Background (per pixel): 
+%mu=baseline+(B*concentration+C)*laserpower
+%std=D+E*mu
+set.bg.baseline = 400; %camera baseline
+set.para.bg.B = 6.4E9; %M^-1mW^-1
+set.para.bg.C = 9.9; %mW^-1
+set.bg.mu = set.bg.baseline+(set.para.bg.B*set.sample.concentration+set.para.bg.C)*set.mic.laser_power;
+set.para.bg.D = -98; 
+set.para.bg.E = 0.26; 
+set.bg.std = set.para.bg.D+set.para.bg.E*set.bg.mu;
 %Peak intensity: lognrnd(mu, B)
 %mu = A*laserpower
-set.para.intensity.A=0.055; %mW^-1 
-set.intensity.std=0.45; 
+set.para.intensity.A=0.105; %mW^-1 
+set.intensity.std=0.6; 
 set.intensity.mu=set.para.intensity.A*set.mic.laser_power;
 
 mean = exp(set.intensity.mu+set.intensity.std^2/2);
-variance = exp(2*set.intensity.mu+set.intensity.std^2)*exp(set.intensity.std^2-1);
-SNR = mean/sqrt(set.bg.mu+(variance)); %estimate SNR
+spatial_sigma = set.mic.wavelength/(2*set.mic.NA*sqrt(8*log(2))*set.mic.pixelsize);
+SNR = 2*pi*mean*spatial_sigma^2/(set.ROI.size*set.bg.std); %number of photons from one event/std bg across full ROI
 
-set.ana.std_factor=5; %threshold at mu+factor*sigma
+set.ana.tolerance=0.5; %when correcting for short drops below threshold, X,Y may differ by this tol to be considered from same source
+set.ana.std_factor=4; %threshold at mu+factor*sigma
 set.ana.loc_settings.thresh=set.bg.mu+sqrt(set.bg.mu)*set.ana.std_factor;
 set.ana.loc_settings.initSig=set.mic.wavelength/(2*set.mic.NA*sqrt(8*log(2)))/set.mic.pixelsize;
 end
