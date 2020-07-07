@@ -1,4 +1,4 @@
-function optimization_method = create_lookup_table_method_circle(av_binding_spots, freq_ratio,circle_series)
+function optimization_method = create_lookup_table_method_circle(optimization_method, av_binding_spots, freq_ratio, circle_series)
 
 for m=1:size(av_binding_spots,2)
     for n=1:size(freq_ratio,2)

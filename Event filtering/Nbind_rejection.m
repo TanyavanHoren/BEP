@@ -1,8 +1,4 @@
-function [estimation, check, ana] = Nbind_rejection(S, makePlot)
-%% Parameters
-rej.outlier_factor=1.5; %outlier rejection for d>d_av+..*sqrt(d_av)
-rej.cluster_std_factor=3; %rejection clusters with number of localizations n<n_min_av-..*sqrt(n_min_av)
-rej.number_gaussians=2; %number of Gaussians fitted within GMM
+function ana = Nbind_rejection(calibration, S, makePlot)
 
 %% Load data
 ROIs=S.ROIs;
@@ -14,11 +10,16 @@ time_trace_data_non=S.time_trace_data_non;
 time_trace_data_spec=S.time_trace_data_spec;
 check = [];
 
+%% Parameters
+rej.outlier_factor=1.5; %outlier rejection for d>d_av+..*sqrt(d_av)
+rej.edge_point_distance=set.ROI.size/2; %points further away than this radius from the center are not considered for DBSCAN
+rej.number_gaussians=2; %number of Gaussians fitted within GMM
+
 ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, makePlot, set, ROIs);
 
 %% Estimation ratio and binding sites
 estimation = estimation_sites_and_ratio(ana,set,i,rej);
-k = choice_of_method(estimation, set);
+k = choice_of_method(calibration, estimation, set);
 
 %% Outlier rejection
 if k==1 || k==2
@@ -32,7 +33,7 @@ end
 
 %% DBSCAN (k=2)
 if k==2
-rej = choice_of_dbscan_params(estimation, set, rej);
+rej = choice_of_dbscan_params(calibration, estimation, set, rej);
 [ana, check] = event_rejection_dbscan(ana, i, set, ROIs, makePlot, k, check, rej);
 end
 

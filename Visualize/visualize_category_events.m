@@ -48,6 +48,7 @@ xlabel('x-position (pixels)')
 ylabel('y-position (pixels)')
 xlim([-set.ROI.size/2 set.ROI.size/2])
 ylim([([-set.ROI.size/2 set.ROI.size/2])])
+legend('Label 0', 'Label 1', 'Label 2', 'Label 3')
 box on
 title('True categories')
 end

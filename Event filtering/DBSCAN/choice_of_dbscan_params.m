@@ -1,6 +1,6 @@
-function rej = choice_of_dbscan_params(estimation, set, rej)
+function rej = choice_of_dbscan_params(calibration, estimation, set, rej)
 
-load calibration_dbscan_30_06_2020
+load(calibration.dbscan);
 %find the closest calibration ratio and binding spot value
 deviations_ratio = abs(optimization_dbscan.options_freq_ratio-estimation.ratio);
 closest_ratio = min(deviations_ratio);

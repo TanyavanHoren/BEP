@@ -1,11 +1,11 @@
-function [false_positives, false_negatives, false_overall] = Test_rejection_loop(makePlot, workspaces, av_binding_spots, freq_ratio, m)
+function [false_positives, false_negatives, false_overall] = Test_rejection_loop(calibration, makePlot, workspaces, av_binding_spots, freq_ratio, m)
 
 %% Determine false/true positives/negatives
 for i=1:size(workspaces,2)
     S = load(workspaces(i));
     for l=1:size(S.ROIs.ROI,2) %for each ROI separately, analysis is done
         S.i=l;
-        [estimation.dataset(i).ROI(l).estimation, checks.dataset(i).ROI(l).check] = Test_rejection(S, makePlot);
+        [estimation.dataset(i).ROI(l).estimation, checks.dataset(i).ROI(l).check] = Test_rejection(calibration, S, makePlot);
     end
 end
 

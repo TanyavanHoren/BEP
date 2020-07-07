@@ -17,9 +17,4 @@ estimation.number_non_spec_events = size(ana.ROI(i).SupResParams,2)-estimation.n
 estimation.ratio = estimation.number_spec_events/estimation.number_non_spec_events;
 av_number_events_single_site=set.mic.dt*set.mic.frames/(set.sample.tb+set.sample.td);
 estimation.number_sites=estimation.number_spec_events/av_number_events_single_site;
-
-estimation.number_sites_2 = ana.ROI(i).timetrace_data.number_bind_calculated;
-estimation.number_spec_events_2 = estimation.number_sites_2*av_number_events_single_site;
-estimation.number_non_spec_events_2 = size(ana.ROI(i).SupResParams,2)-estimation.number_spec_events_2;
-estimation.ratio_2 = estimation.number_spec_events_2/estimation.number_non_spec_events_2;
 end

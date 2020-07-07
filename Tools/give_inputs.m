@@ -28,15 +28,15 @@ set.other.clims = [0 0.5E5]; %fix colourscale visualization
 
 %Background (per pixel): 
 %mu=baseline+(B*concentration+C)*laserpower
-%std=D+E*mu
+%std=-D+E*mu
 set.bg.baseline = 400; %camera baseline
 set.para.bg.B = 6.4E9; %M^-1mW^-1
 set.para.bg.C = 9.9; %mW^-1
 set.bg.mu = set.bg.baseline+(set.para.bg.B*set.sample.concentration+set.para.bg.C)*set.mic.laser_power;
-set.para.bg.D = -98; 
+set.para.bg.D = 98; 
 set.para.bg.E = 0.26; 
-set.bg.std = set.para.bg.D+set.para.bg.E*set.bg.mu;
-%Peak intensity: lognrnd(mu, B)
+set.bg.std = -set.para.bg.D+set.para.bg.E*set.bg.mu;
+%Peak intensity: lognrnd(mu, std)
 %mu = A*laserpower
 set.para.intensity.A=0.105; %mW^-1 
 set.intensity.std=0.6; 
@@ -46,7 +46,17 @@ mean = exp(set.intensity.mu+set.intensity.std^2/2);
 spatial_sigma = set.mic.wavelength/(2*set.mic.NA*sqrt(8*log(2))*set.mic.pixelsize);
 SNR = 2*pi*mean*spatial_sigma^2/(set.ROI.size*set.bg.std); %number of photons from one event/std bg across full ROI
 
-set.ana.tolerance=0.5; %when correcting for short drops below threshold, X,Y may differ by this tol to be considered from same source
+%% loc precision
+std_psf=set.mic.wavelength/(2*set.mic.NA*sqrt(8*log(2)));
+mean_I=exp(set.intensity.mu+set.intensity.std^2/2);
+N_photons=2*pi*(std_psf/set.mic.pixelsize)^2*mean_I;
+term1=(std_psf^2+(set.mic.pixelsize^2/12))/N_photons;
+term2=8*pi*std_psf^4*set.bg.std^2/(set.mic.pixelsize^2*N_photons^2);
+loc_prec_1d=sqrt(term1+term2);
+set.loc_prec=sqrt(2)*loc_prec_1d;
+
+%%
+set.ana.tolerance=10*set.loc_prec/set.mic.pixelsize; %when correcting for short drops below threshold, X,Y may differ by this tol to be considered from same source
 set.ana.std_factor=4; %threshold at mu+factor*sigma
 set.ana.loc_settings.thresh=set.bg.mu+sqrt(set.bg.mu)*set.ana.std_factor;
 set.ana.loc_settings.initSig=set.mic.wavelength/(2*set.mic.NA*sqrt(8*log(2)))/set.mic.pixelsize;

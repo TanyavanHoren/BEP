@@ -1,4 +1,4 @@
-function optimization_method = create_lookup_table_method_rectangle(av_binding_spots, freq_ratio, rectangle_series, optimization_method)
+function optimization_method = create_lookup_table_method_rectangle(optimization_method, av_binding_spots, freq_ratio, rectangle_series)
 
 for m=1:size(av_binding_spots,2)
     for n=1:size(freq_ratio,2)

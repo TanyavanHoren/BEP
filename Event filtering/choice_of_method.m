@@ -1,6 +1,6 @@
-function k = choice_of_method(estimation, set)
+function k = choice_of_method(calibration, estimation, set)
 
-load calibration_methods_16_06_2020
+load(calibration.method);
 %find the closest calibration ratio and binding spot value
 deviations_ratio = abs(optimization_method.options_freq_ratio-estimation.ratio);
 closest_ratio = min(deviations_ratio);

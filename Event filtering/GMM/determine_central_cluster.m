@@ -33,8 +33,8 @@ if makePlot == 1
     ana.ROI(i).loc.good_y_gmm_central = [ana.ROI(i).SupResParams.y_coord]';
     ana.ROI(i).loc.good_y_gmm_central = [ana.ROI(i).loc.good_y_gmm_central([ana.ROI(i).SupResParams.isRej_GMM]==0)]; %condition
     scatter([ana.ROI(i).loc.good_x_gmm_central],[ana.ROI(i).loc.good_y_gmm_central], 1, 'g');
-    hold on 
-    plot_object_binding_spots(ROIs, set, i);
+    %hold on 
+    %plot_object_binding_spots(ROIs, set, i);
     xlabel('x-position (pixels)')
     ylabel('y-position (pixels)')
     xlim([-set.ROI.size/2 set.ROI.size/2])

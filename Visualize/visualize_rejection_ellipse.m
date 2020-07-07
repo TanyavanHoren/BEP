@@ -10,8 +10,8 @@ ana.ROI(i).loc.good_y_2 = [ana.ROI(i).SupResParams.y_coord]';
 ana.ROI(i).loc.good_y_2 = [ana.ROI(i).loc.good_y_2([ana.ROI(i).SupResParams.isRej_DEFAULT]==0)];
 
 scatter([ana.ROI(i).loc.good_x_2],[ana.ROI(i).loc.good_y_2], 1, 'g');
-hold on
-plot_object_binding_spots(ROIs, set, i);
+%hold on
+%plot_object_binding_spots(ROIs, set, i);
 hold on
 plot(r_ellipse(:,1) ,r_ellipse(:,2),'-','Color','b')
 xlabel('x-position (pixels)')

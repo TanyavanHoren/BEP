@@ -21,8 +21,8 @@ gmm_var.idx = cluster(gmm,[[ana.ROI(i).SupResParams.x_coord]'  [ana.ROI(i).SupRe
 if makePlot == 1
     figure
     gscatter([ana.ROI(i).SupResParams.x_coord]',[ana.ROI(i).SupResParams.y_coord]',gmm_var.idx,'cmyb','o',1);
-    hold on 
-    plot_object_binding_spots(ROIs, set, i)
+    %hold on 
+    %plot_object_binding_spots(ROIs, set, i)
     legend('Cluster 1','Cluster 2');
     xlabel('x-position (pixels)')
     ylabel('y-position (pixels)')

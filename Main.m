@@ -30,13 +30,12 @@ set.other.visFreq = 500; %visualization made every # frames
 %% Read input
 %set=settings; sample, mic=microscope, objects, para=parameters, bg=background, intensity, other
 %ROI; ROI(i): general, obj=object, sites, frames
-set.mic.frames = 48000; %: 144E3 for a full 2h experiment with 50ms frames
+set.mic.frames = 48000; 
 set.ROI.number = 1; % ROIs or objects
 set.obj.av_binding_spots = 5; % per object
-set.para.freq_ratio = 10; %ratio f_specific/f_non_specific
+set.para.freq_ratio = 1; %ratio f_specific/f_non_specific
 set.other.fixed_bind_spots=1; %fix or not
-[set, SNR]  = give_inputs(set); %other inputs
-set = determination_loc_precision(set);
+[set, SNR] = give_inputs(set); %other inputs
 
 %% Predefine
 frame_data = [];
@@ -94,7 +93,7 @@ disp("Generate data done" + newline + "Time taken: " + num2str(t_end) + " second
 if set.other.time_analysis == 1
     tic;
     for i=1:set.ROI.number
-        ana.ROI(i).timetrace_data = spikes_analysis(time_axis, time_trace_data.ROI(i).frame(:)', i, 0, set, frame_data.ROI(i).frame(:,:,:));
+        ana.ROI(i).timetrace_data = spikes_analysis(time_axis, time_trace_data.ROI(i).frame(:)', set, frame_data.ROI(i).frame(:,:,:));
     end
     generate_time_traces(time_trace_data, set, ana.ROI(i).timetrace_data);
     ana = determine_averages_and_binding_spots(ana, set);
@@ -116,6 +115,53 @@ if set.other.loc_analysis == 1
 end
 
 %% Test area
+dbscan_var.idx = dbscan([[ana.ROI(i).SupResParams.x_coord]'  [ana.ROI(i).SupResParams.y_coord]'],0.2,5);
+figure
+gscatter([ana.ROI(i).SupResParams.x_coord],[ana.ROI(i).SupResParams.y_coord],dbscan_var.idx,'rcmyb','o',1);
+hold on
+%plot_object_binding_spots(ROIs, set, i)
+xlabel('x-position (pixels)')
+ylabel('y-position (pixels)')
+box on
+title('DBSCAN')
+%find how many points are identified per cluster 
+[num_per_index_dbscan,indices_dbscan] = groupcounts(dbscan_var.idx);
+grouped_dbscan = [indices_dbscan num_per_index_dbscan];
+%exclude outliers
+if sum(ismember(indices_dbscan, -1))==1
+    grouped_dbscan(1,:)=[];
+end
+num_per_index_dbscan = grouped_dbscan(:,2);
+indices_dbscan = grouped_dbscan(:,1);
+%check for each localizations if it corresponds to one of the merged clusters
+%if not -> outlier -> index 1 (done by building a matrix with all to be rejected values)
+data = [[ana.ROI(i).SupResParams.event_idx]' [ana.ROI(i).SupResParams.x_coord]' [ana.ROI(i).SupResParams.y_coord]'];
+data(ismember(dbscan_var.idx, indices_dbscan),:)=[];
+logical=num2cell(false(1,size(ana.ROI(i).SupResParams,2)));
+[ana.ROI(i).SupResParams.isRej_DBSCAN]=logical{:};
+for j=1:size(ana.ROI(i).SupResParams,2)
+    if ismember(ana.ROI(i).SupResParams(j).event_idx,data(:,1))
+        ana.ROI(i).SupResParams(j).isRej_DBSCAN=true;
+    end
+end
+figure
+scatter([ana.ROI(i).SupResParams.x_coord]',[ana.ROI(i).SupResParams.y_coord]', 1, 'r');
+hold on
+ana.ROI(i).loc.good_x_dbscan_merge = [ana.ROI(i).SupResParams.x_coord]'; %copy
+ana.ROI(i).loc.good_x_dbscan_merge = [ana.ROI(i).loc.good_x_dbscan_merge([ana.ROI(i).SupResParams.isRej_DBSCAN]==0)]; %condition
+ana.ROI(i).loc.good_y_dbscan_merge = [ana.ROI(i).SupResParams.y_coord]';
+ana.ROI(i).loc.good_y_dbscan_merge = [ana.ROI(i).loc.good_y_dbscan_merge([ana.ROI(i).SupResParams.isRej_DBSCAN]==0)]; %condition
+scatter([ana.ROI(i).loc.good_x_dbscan_merge],[ana.ROI(i).loc.good_y_dbscan_merge], 1, 'g');
+%hold on
+%plot_object_binding_spots(ROIs, set, i)
+xlabel('x-position (pixels)')
+xlim([-(set.ROI.size-1)/4 (set.ROI.size-1)/4])
+ylabel('y-position (pixels)')
+ylim([-(set.ROI.size-1)/4 (set.ROI.size-1)/4])
+box on
+title('DBSCAN merged clusters')
+    
+    
 % for i=1:set.ROI.number
 %     voronoi_var = create_voronoi_diagram(ana,i,set);
 %     voronoi_var = determine_loc_densities(voronoi_var,i);
@@ -142,7 +188,7 @@ end
 % ana.ROI(i).loc.good_y_voronoi = [ana.ROI(i).loc.good_y_voronoi([ana.ROI(i).SupResParams.isRej_Voronoi]==0)]; %condition
 % scatter([ana.ROI(i).loc.good_x_voronoi],[ana.ROI(i).loc.good_y_voronoi], 1, 'g');
 % hold on
-% plot_object_binding_spots(ROIs, set, i);
+% %plot_object_binding_spots(ROIs, set, i);
 % xlabel('x-position (pixels)')
 % ylabel('y-position (pixels)')
 % xlim([-set.ROI.size/2 set.ROI.size/2])

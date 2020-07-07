@@ -19,6 +19,7 @@ if optimize_dbscan.circle == 1 || optimize_dbscan.rectangle == 1
     optimization_dbscan.options_av_binding_spots = av_binding_spots; % per object -> these values were used for optimization
     optimization_dbscan.options_freq_ratio = freq_ratio; %ratio f_specific/f_non_specific -> these values were used for optimization
 end
+calibration.dbscan = 'calibration_dbscan_30_06_2020';
 
 optimize_method.circle = 0; %0: do not run optimalization, 1: do run optimalization
 optimize_method.rectangle = 0; %0: do not run optimalization, 1: do run optimalization
@@ -29,11 +30,12 @@ if optimize_method.circle == 1 || optimize_method.rectangle == 1
     optimization_method.options_av_binding_spots = av_binding_spots; % per object -> these values were used for optimization
     optimization_method.options_freq_ratio = freq_ratio; %ratio f_specific/f_non_specific -> these values were used for optimization
 end
+calibration.method = 'calibration_methods_30_06_2020';
 
 generate_new_data_Ndet.circle = 0; %0: no new data generation, 1: new data generation
 generate_new_data_Ndet.rectangle = 0; %0: no new data generation, 1: new data generation
 correction_binding_spots.circle = 0; %0: no correction analysis, 1: correction analysis
-correction_binding_spots.rectangle = 0; %0: no correction analysis, 1: correction analysis
+correction_binding_spots.rectangle = 1; %0: no correction analysis, 1: correction analysis
 Ndet_binding_spots = [5 20 100]; %per object
 Ndet_freq_ratio = 0.5:0.5:10; %ratio f_specific/f_non_specific
 plotcolours={'b','m','g','c','k','r','y'};
@@ -59,10 +61,10 @@ end
 if test_rejection.circle==1
     for m=1:size(av_binding_spots,2)
         workspaces=filenames_circle(1+(m-1)*size(freq_ratio,2):m*size(freq_ratio,2));
-        [circle_series(m).false_positives, circle_series(m).false_negatives, circle_series(m).false_overall] = Test_rejection_loop(makePlot, workspaces, av_binding_spots, freq_ratio, m);
+        [circle_series(m).false_positives, circle_series(m).false_negatives, circle_series(m).false_overall] = Test_rejection_loop(calibration, makePlot, workspaces, av_binding_spots, freq_ratio, m);
     end
     if optimize_method.circle == 1
-        optimization_method = create_lookup_table_method_circle(av_binding_spots, freq_ratio,circle_series);
+        optimization_method = create_lookup_table_method_circle(optimization_method, av_binding_spots, freq_ratio, circle_series);
     end
 end
 
@@ -70,21 +72,20 @@ end
 if test_rejection.rectangle==1
     for m=1:size(av_binding_spots,2)
         workspaces=filenames_rectangle(1+(m-1)*size(freq_ratio,2):m*size(freq_ratio,2));
-        [rectangle_series(m).false_positives, rectangle_series(m).false_negatives, rectangle_series(m).false_overall] = Test_rejection_loop(makePlot, workspaces, av_binding_spots, freq_ratio, m);
+        [rectangle_series(m).false_positives, rectangle_series(m).false_negatives, rectangle_series(m).false_overall] = Test_rejection_loop(calibration, makePlot, workspaces, av_binding_spots, freq_ratio, m);
     end
     if optimize_method.rectangle == 1
-    optimization_method = create_lookup_table_method_rectangle(av_binding_spots, freq_ratio, rectangle_series, optimization_method);
+    optimization_method = create_lookup_table_method_rectangle(optimization_method, av_binding_spots, freq_ratio, rectangle_series);
     end
 end
 
 %% Show improvement in binding spot determination
 [filenames_Ndet_circle, filenames_Ndet_rectangle] = Generate_datasets_Ndet_loop(S,Ndet_binding_spots,Ndet_freq_ratio, generate_new_data_Ndet);
-
 if correction_binding_spots.circle==1
     circle_series_Ndet=[];
     for m=1:size(Ndet_binding_spots,2)
         workspaces=filenames_Ndet_circle(1+(m-1)*size(Ndet_freq_ratio,2):m*size(Ndet_freq_ratio,2));
-        circle_series_Ndet = Nbind_rejection_loop(makePlot, workspaces, m, circle_series_Ndet);
+        circle_series_Ndet = Nbind_rejection_loop(calibration, makePlot, workspaces, m, circle_series_Ndet);
         create_scatter_plot_Nbind(workspaces, Ndet_binding_spots, Ndet_freq_ratio, m, circle_series_Ndet,plotcolours);
     end
 end
@@ -93,10 +94,42 @@ if correction_binding_spots.rectangle==1
     rectangle_series_Ndet=[];
     for m=1:size(Ndet_binding_spots,2)
         workspaces=filenames_Ndet_rectangle(1+(m-1)*size(Ndet_freq_ratio,2):m*size(Ndet_freq_ratio,2));
-        rectangle_series_Ndet = Nbind_rejection_loop(makePlot, workspaces, m, rectangle_series_Ndet);
+        rectangle_series_Ndet = Nbind_rejection_loop(calibration, makePlot, workspaces, m, rectangle_series_Ndet);
         create_scatter_plot_Nbind(workspaces, Ndet_binding_spots, Ndet_freq_ratio, m, rectangle_series_Ndet,plotcolours);
     end
 end
+
+%% Test area
+% %%
+% figure
+% for m=1:size(Ndet_binding_spots,2)
+%     workspaces=filenames_Ndet_circle(1+(m-1)*size(Ndet_freq_ratio,2):m*size(Ndet_freq_ratio,2));
+%     for k=1:size(workspaces,2)
+%         S = load(workspaces(k));
+%         A=zeros(1,size(S.ROIs.ROI,2));
+%         for l=1:size(S.ROIs.ROI,2) %for each ROI separately, analysis is done
+%             S.i=l;
+%             ROIs=S.ROIs;
+%             ana=S.ana;
+%             i=S.i;
+%             set=S.set;
+%             time_trace_data=S.time_trace_data;
+%             time_trace_data_non=S.time_trace_data_non;
+%             time_trace_data_spec=S.time_trace_data_spec;
+%             ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, makePlot, set, ROIs);
+%             A(l)=ana.ROI(i).numBoth/size(ana.ROI(i).SupResParams,2);
+%         end
+%         double_events.series(m).value(1,k)=mean(A);
+%     end
+%     plot(Ndet_freq_ratio,double_events.series(m).value,'-o')
+%     hold on
+% end
+% xlabel('Ratio specific to non-specific')
+% ylabel('Fraction of simultaneous events')
+% xlim([0.5 inf])
+% box on
+% title('Prevalence simultaneous events')
+% legend('5 binding sites', '20 binding sites', '100 binding sites')
 
 %% Check for loose file
 % m=1;

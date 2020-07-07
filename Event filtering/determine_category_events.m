@@ -23,6 +23,8 @@ end
 
 ana.ROI(i).numNonSpecific = size(non_spec_log(non_spec_log==1),2);
 ana.ROI(i).numSpecific = size(non_spec_log(non_spec_log==0),2);
+ana.ROI(i).numBoth = size(non_spec_log(non_spec_log==2),2);
+ana.ROI(i).numNeither = size(non_spec_log(non_spec_log==3),2);
 ana.ROI(i).numOther = size(non_spec_log,2) - ana.ROI(i).numNonSpecific - ana.ROI(i).numSpecific;
 logical = num2cell(non_spec_log);
 [ana.ROI(i).SupResParams.isNonSpecific]=logical{:};
