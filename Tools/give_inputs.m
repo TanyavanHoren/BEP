@@ -1,20 +1,21 @@
 function [set, SNR]  = give_inputs(set)
 
-set.mic.dt = 50E-3;% 
-set.mic.pixelsize = 0.117; %mu
-set.mic.t_end = set.mic.dt*set.mic.frames; %s
-set.mic.NA = 1.4; %numerical aperature
-set.mic.wavelength = 0.637; %mu
-set.mic.laser_power = 100; %in mW
-
 set.sample.k_off = 1.6; %s^-1
 set.sample.k_on = 2.3E6; %M^-1s^-1
 set.sample.concentration = set.sample.k_off/(set.sample.k_on*20*set.obj.av_binding_spots); %in M
 set.sample.tb = 1/set.sample.k_off; %s
 set.sample.td = 1/(set.sample.k_on*set.sample.concentration); %s
 set.sample.non_lowbound_tb = 0.2; %s lower bound tb range
-set.sample.non_upbound_tb = 6; %s upper bound tb range
+set.sample.non_upbound_tb = 2; %s upper bound tb range
 set.sample.non_on_object_chance = 0;
+
+set.mic.dt = 50E-3;% 
+set.mic.frames = round(100*(set.sample.tb+set.sample.td)/(set.obj.av_binding_spots*set.mic.dt));
+set.mic.pixelsize = 0.117; %mu
+set.mic.t_end = set.mic.dt*set.mic.frames; %s
+set.mic.NA = 1.4; %numerical aperature
+set.mic.wavelength = 0.637; %mu
+set.mic.laser_power = 100; %in mW
 
 set.obj.av_size_x = 0.07; %mu nanorod
 set.obj.av_size_y = 0.02; %mu nanorod

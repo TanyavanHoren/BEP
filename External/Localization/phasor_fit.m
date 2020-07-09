@@ -1,4 +1,4 @@
-function [PositionX, PositionY] = phasor_fit(ROI)
+function [PositionX, PositionY] = phasor_fit(ROI, set)
 
 %% Perform a 2D Fourier transformation on the complete ROI.
 fft_values = fft2(ROI);
@@ -12,7 +12,7 @@ if (angX>0)
 end
 %Normalize the angle by 2pi and the amount of pixels of the ROI
 PositionX = (abs(angX)/(2*pi/WindowPixelSize) + 0.5);
-if (PositionX > 9)  
+if (PositionX > set.ROI.size)  
     PositionX = PositionX - WindowPixelSize;
 end
     
@@ -24,7 +24,7 @@ if (angY>0)
 end
 %Normalize the angle by 2pi and the amount of pixels of the ROI
 PositionY = (abs(angY)/(2*pi/WindowPixelSize) + 0.5);
-if (PositionY > 9)  
+if (PositionY > set.ROI.size)  
     PositionY = PositionY - WindowPixelSize;
 end
 end

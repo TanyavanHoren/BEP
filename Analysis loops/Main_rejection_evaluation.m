@@ -6,7 +6,6 @@ clc
 generate_new_data.circle = 0; %0: no new data generation, 1: new data generation
 generate_new_data.rectangle = 0; %0: no new data generation, 1: new data generation
 S.set.ROI.number = 5; %number of ROIs/datasets with identical settings
-S.set.mic.frames = 48000; %: 144E3 for a full 2h experiment with 50ms frames
 
 av_binding_spots = [5 10 20 50 100]; %per object
 freq_ratio = [0.1 0.5 1 5 10]; %ratio f_specific/f_non_specific
@@ -23,7 +22,7 @@ calibration.dbscan = 'calibration_dbscan_30_06_2020';
 
 optimize_method.circle = 0; %0: do not run optimalization, 1: do run optimalization
 optimize_method.rectangle = 0; %0: do not run optimalization, 1: do run optimalization
-test_rejection.circle = 0; %0: do not test rejection, 1: do test rejection
+test_rejection.circle = 1; %0: do not test rejection, 1: do test rejection
 test_rejection.rectangle = 0; %0: do not test rejection, 1: do test rejection
 makePlot = 0; %0: do not make plots of rejection processes, 1: do make plots
 if optimize_method.circle == 1 || optimize_method.rectangle == 1 
@@ -35,7 +34,7 @@ calibration.method = 'calibration_methods_30_06_2020';
 generate_new_data_Ndet.circle = 0; %0: no new data generation, 1: new data generation
 generate_new_data_Ndet.rectangle = 0; %0: no new data generation, 1: new data generation
 correction_binding_spots.circle = 0; %0: no correction analysis, 1: correction analysis
-correction_binding_spots.rectangle = 1; %0: no correction analysis, 1: correction analysis
+correction_binding_spots.rectangle = 0; %0: no correction analysis, 1: correction analysis
 Ndet_binding_spots = [5 20 100]; %per object
 Ndet_freq_ratio = 0.5:0.5:10; %ratio f_specific/f_non_specific
 plotcolours={'b','m','g','c','k','r','y'};
@@ -100,36 +99,6 @@ if correction_binding_spots.rectangle==1
 end
 
 %% Test area
-% %%
-% figure
-% for m=1:size(Ndet_binding_spots,2)
-%     workspaces=filenames_Ndet_circle(1+(m-1)*size(Ndet_freq_ratio,2):m*size(Ndet_freq_ratio,2));
-%     for k=1:size(workspaces,2)
-%         S = load(workspaces(k));
-%         A=zeros(1,size(S.ROIs.ROI,2));
-%         for l=1:size(S.ROIs.ROI,2) %for each ROI separately, analysis is done
-%             S.i=l;
-%             ROIs=S.ROIs;
-%             ana=S.ana;
-%             i=S.i;
-%             set=S.set;
-%             time_trace_data=S.time_trace_data;
-%             time_trace_data_non=S.time_trace_data_non;
-%             time_trace_data_spec=S.time_trace_data_spec;
-%             ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, makePlot, set, ROIs);
-%             A(l)=ana.ROI(i).numBoth/size(ana.ROI(i).SupResParams,2);
-%         end
-%         double_events.series(m).value(1,k)=mean(A);
-%     end
-%     plot(Ndet_freq_ratio,double_events.series(m).value,'-o')
-%     hold on
-% end
-% xlabel('Ratio specific to non-specific')
-% ylabel('Fraction of simultaneous events')
-% xlim([0.5 inf])
-% box on
-% title('Prevalence simultaneous events')
-% legend('5 binding sites', '20 binding sites', '100 binding sites')
 
 %% Check for loose file
 % m=1;

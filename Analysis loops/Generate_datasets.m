@@ -26,7 +26,6 @@ set.other.time_analysis = 1; %0: no time trace analysis, 1: do analyze
 %% Read input
 %set=settings; sample, mic=microscope, objects, para=parameters, bg=background, intensity, other
 %ROI; ROI(i): general, obj=object, sites, frames
-set.mic.frames = S.set.mic.frames; %: 144E3 for a full 2h experiment with 50ms frames
 set.ROI.number = S.set.ROI.number; % ROIs or objects
 set.obj.av_binding_spots = S.set.obj.av_binding_spots; % per object
 set.para.freq_ratio = S.set.para.freq_ratio; %ratio f_specific/f_non_specific
