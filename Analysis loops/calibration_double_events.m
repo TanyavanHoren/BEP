@@ -4,9 +4,9 @@ clc
 
 %% Settings
 new_data_generated = 0; %1: yes or 0: no
-S.set.ROI.number = 2; %number of ROIs/datasets with identical settings
-av_binding_spots = [5 20 100]; %per object
-freq_ratio = [0.1 0.5 1 5 10]; %ratio f_specific/f_non_specific
+S.set.ROI.number = 50; %number of ROIs/datasets with identical settings
+av_binding_spots = [20]; %per object
+freq_ratio = 0.2:0.2:5; %ratio f_specific/f_non_specific
 makePlot = 0;
 
 %% Generate data
@@ -53,6 +53,11 @@ for m=1:size(av_binding_spots,2)
         figure
     end
     errorbar(freq_ratio, [series(m).double_events.mean]', [series(m).double_events.std]');
-    hold on 
+    xlabel('Ratio specific to non-specific')
+    ylabel('Fraction of simultaneous events')
+    xlim([0 inf]);
+    box on
+    title(['Prevalence of simultaneous events'])
+    hold on
 end
 

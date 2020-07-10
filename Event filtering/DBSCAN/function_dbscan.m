@@ -1,7 +1,7 @@
 function dbscan_var = function_dbscan(ana, set, ROIs, i, makePlot, rej)
 
 %dbscan_var.idx = dbscan([ana.ROI(i).loc.non_edge_x  ana.ROI(i).loc.non_edge_y],rej.dbscan_eps,rej.dbscan_minPts);
-dbscan_var.idx = dbscan([ana.ROI(i).loc.non_edge_x  ana.ROI(i).loc.non_edge_y],0.15,10);
+dbscan_var.idx = dbscan([ana.ROI(i).loc.non_edge_x  ana.ROI(i).loc.non_edge_y],0.2,5);
 if makePlot == 1
     figure
     gscatter(ana.ROI(i).loc.non_edge(:,2),ana.ROI(i).loc.non_edge(:,3),dbscan_var.idx,'rcmyb','o',1);

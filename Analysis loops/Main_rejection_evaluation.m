@@ -3,12 +3,12 @@ close all
 clc
 
 %% Settings
-generate_new_data.circle = 0; %0: no new data generation, 1: new data generation
-generate_new_data.rectangle = 0; %0: no new data generation, 1: new data generation
-S.set.ROI.number = 5; %number of ROIs/datasets with identical settings
+generate_new_data.circle = 1; %0: no new data generation, 1: new data generation
+generate_new_data.rectangle = 1; %0: no new data generation, 1: new data generation
+S.set.ROI.number = 50; %number of ROIs/datasets with identical settings
 
-av_binding_spots = [5 10 20 50 100]; %per object
-freq_ratio = [0.1 0.5 1 5 10]; %ratio f_specific/f_non_specific
+av_binding_spots = [10 20 50 100]; %per object
+freq_ratio = [0.2 0.5 1 2]; %ratio f_specific/f_non_specific
 
 optimize_dbscan.circle = 0; %0: do not run optimalization, 1: do run optimalization
 optimize_dbscan.rectangle = 0; %0: do not run optimalization, 1: do run optimalization
@@ -22,7 +22,7 @@ calibration.dbscan = 'calibration_dbscan_30_06_2020';
 
 optimize_method.circle = 0; %0: do not run optimalization, 1: do run optimalization
 optimize_method.rectangle = 0; %0: do not run optimalization, 1: do run optimalization
-test_rejection.circle = 1; %0: do not test rejection, 1: do test rejection
+test_rejection.circle = 0; %0: do not test rejection, 1: do test rejection
 test_rejection.rectangle = 0; %0: do not test rejection, 1: do test rejection
 makePlot = 0; %0: do not make plots of rejection processes, 1: do make plots
 if optimize_method.circle == 1 || optimize_method.rectangle == 1 
@@ -31,12 +31,12 @@ if optimize_method.circle == 1 || optimize_method.rectangle == 1
 end
 calibration.method = 'calibration_methods_30_06_2020';
 
-generate_new_data_Ndet.circle = 0; %0: no new data generation, 1: new data generation
-generate_new_data_Ndet.rectangle = 0; %0: no new data generation, 1: new data generation
+generate_new_data_Ndet.circle = 1; %0: no new data generation, 1: new data generation
+generate_new_data_Ndet.rectangle = 1; %0: no new data generation, 1: new data generation
 correction_binding_spots.circle = 0; %0: no correction analysis, 1: correction analysis
 correction_binding_spots.rectangle = 0; %0: no correction analysis, 1: correction analysis
-Ndet_binding_spots = [5 20 100]; %per object
-Ndet_freq_ratio = 0.5:0.5:10; %ratio f_specific/f_non_specific
+Ndet_binding_spots = [5 10 20 100]; %per object
+Ndet_freq_ratio = 0.2:0.2:10; %ratio f_specific/f_non_specific
 plotcolours={'b','m','g','c','k','r','y'};
 
 %% Data generation (if necessary)

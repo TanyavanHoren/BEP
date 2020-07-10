@@ -57,10 +57,10 @@ false_overall.std=nanstd(concat_false_overall,[],3);
 % end
 % set(gca,'XtickLabel',newXticklabel);
 % xlabel('Ratio specific to non-specific')
-% ylabel('Relative number of overall false assigments')
+% ylabel('Number of false assigments')
 % set(gca, 'YScale', 'log')
 % box on
-% title(['Average overall false assignments - ',num2str(av_binding_spots(m)),' binding spots'])
+% title(['False assignments - ',num2str(av_binding_spots(m)),' binding spots'])
 
 %% Plot
 figure
@@ -92,6 +92,6 @@ newXticklabel = {[num2str(freq_ratio(1))],[num2str(freq_ratio(2))],[num2str(freq
 set(gca, 'YAxisLocation', 'origin')                                      % Set New Y-Tick Labels
 set(gca,'XtickLabel',newXticklabel);
 xlabel('Ratio specific to non-specific')
-ylabel('Fraction of false assignments')
+ylabel('Number of false assignments')
 box on
 title(['False assignments - ',num2str(av_binding_spots(m)),' binding spots'])

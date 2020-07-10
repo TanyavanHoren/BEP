@@ -30,9 +30,9 @@ set.other.visFreq = 500; %visualization made every # frames
 %% Read input
 %set=settings; sample, mic=microscope, objects, para=parameters, bg=background, intensity, other
 %ROI; ROI(i): general, obj=object, sites, frames 
-set.ROI.number = 1; % ROIs or objects
-set.obj.av_binding_spots = 10; % per object
-set.para.freq_ratio = 2; %ratio f_specific/f_non_specific
+set.ROI.number = 50; % ROIs or objects
+set.obj.av_binding_spots = 100; % per object
+set.para.freq_ratio = 0.2; %ratio f_specific/f_non_specific
 set.other.fixed_bind_spots = 0; %fix or not
 [set, SNR] = give_inputs(set); %other inputs
 
@@ -107,7 +107,14 @@ if set.other.loc_analysis == 1
         merged_frame_data = merge_events(ana,i,frame_data);
         ana.ROI(i).SupResParams = merge_Matej_inspired_fitting_by_Dion(merged_frame_data.ROI(i).frame, set, i, ana);
         ana = position_correction(ana, set, i);
+        figure
         scatter([ana.ROI(i).SupResParams.x_coord], [ana.ROI(i).SupResParams.y_coord],1);
+        xlabel('x-position (pixels)')
+        ylabel('y-position (pixels)')
+        xlim([-set.ROI.size/2 set.ROI.size/2])
+        ylim([([-set.ROI.size/2 set.ROI.size/2])])
+        box on
+        title('Event localizations')
         ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, 1, set, ROIs);
     end
     t_end = toc;
@@ -115,12 +122,12 @@ if set.other.loc_analysis == 1
 end
 
 %% Test area
-    
+%     
 % for i=1:set.ROI.number
 %     voronoi_var = create_voronoi_diagram(ana,i,set);
 %     voronoi_var = determine_loc_densities(voronoi_var,i);
 % end
-% logical=voronoi_var.ROI(i).delta_norm3<1;
+% logical=voronoi_var.ROI(i).delta_norm3<3;
 % % rej.outlier_factor=1.5;
 % % ana=reject_outliers(ana, i, set, ROIs, 1, rej);
 % % outlier_log=[ana.ROI(i).SupResParams.isOutlier];
