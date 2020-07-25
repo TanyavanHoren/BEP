@@ -13,6 +13,7 @@ xlabel('x-position (pixels)')
 ylabel('y-position (pixels)')
 xlim([-set.ROI.size/2 set.ROI.size/2])
 ylim([([-set.ROI.size/2 set.ROI.size/2])])
+legend('Outlier','Inlier')
 box on
 title('Outlier rejection')
 end

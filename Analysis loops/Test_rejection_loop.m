@@ -41,27 +41,6 @@ concat_false_overall=concat_false_positives+concat_false_negatives;
 false_overall.averages=nanmean(concat_false_overall,3);
 false_overall.std=nanstd(concat_false_overall,[],3);
 
-% figure
-% b.false_overall=bar(false_overall.averages, 'grouped');
-% hold on
-% nbars=size(false_overall.averages,2);
-% x_errorbar=[];
-% for r=1:nbars
-%     x_errorbar=[x_errorbar; b.false_overall(r).XEndPoints];
-% end
-% errorbar(x_errorbar',false_overall.averages,false_overall.std,'k','linestyle','none')'; 
-% legend('Error ellipse','DBSCAN','GMM');
-% newXticklabel = {};
-% for n=1:size(freq_ratio,2)
-%     newXticklabel{n}=[num2str(freq_ratio(n))];
-% end
-% set(gca,'XtickLabel',newXticklabel);
-% xlabel('Ratio specific to non-specific')
-% ylabel('Number of false assigments')
-% set(gca, 'YScale', 'log')
-% box on
-% title(['False assignments - ',num2str(av_binding_spots(m)),' binding spots'])
-
 %% Plot
 figure
 b.false_positives=bar(false_positives.averages, 'grouped');
@@ -73,9 +52,12 @@ nbars=size(false_positives.averages,2);
 x_errorbar=[];
 for r=1:nbars
     x_errorbar=[x_errorbar; b.false_positives(r).XEndPoints];
-end
-errorbar(x_errorbar',false_positives.averages,false_positives.std,'k','linestyle','none')'; 
+end 
+scatter(x_errorbar(1,:)',false_positives.averages(:,1)+false_positives.std(:,1),40,'v','MarkerEdgeColor',[0 0 0],'MarkerFaceColor',b.false_positives(1).FaceColor,'LineWidth',0.1); 
+scatter(x_errorbar(2,:)',false_positives.averages(:,2)+false_positives.std(:,2),40,'v','MarkerEdgeColor',[0 0 0],'MarkerFaceColor',b.false_positives(2).FaceColor,'LineWidth',0.1);
+scatter(x_errorbar(3,:)',false_positives.averages(:,3)+false_positives.std(:,3),40,'v','MarkerEdgeColor',[0 0 0],'MarkerFaceColor',b.false_positives(3).FaceColor,'LineWidth',0.1); 
 hold on 
+
 b.false_negatives=bar(false_negatives.averages, 'grouped');
 b.false_negatives(1).FaceColor = [0 0.4470 0.7410];
 b.false_negatives(2).FaceColor = [0.8500 0.3250 0.0980];
@@ -86,12 +68,18 @@ x_errorbar=[];
 for r=1:nbars
     x_errorbar=[x_errorbar; b.false_negatives(r).XEndPoints];
 end
-errorbar(x_errorbar',false_negatives.averages,false_negatives.std,'k','linestyle','none')'; 
+scatter(x_errorbar(1,:)',false_negatives.averages(:,1)+false_negatives.std(:,1),40,'^','MarkerEdgeColor',[0 0 0],'MarkerFaceColor',b.false_negatives(1).FaceColor,'LineWidth',0.1); 
+scatter(x_errorbar(2,:)',false_negatives.averages(:,2)+false_negatives.std(:,2),40,'^','MarkerEdgeColor',[0 0 0],'MarkerFaceColor',b.false_negatives(2).FaceColor,'LineWidth',0.1);
+scatter(x_errorbar(3,:)',false_negatives.averages(:,3)+false_negatives.std(:,3),40,'^','MarkerEdgeColor',[0 0 0],'MarkerFaceColor',b.false_negatives(3).FaceColor,'LineWidth',0.1); 
 legend('Error ellipse','DBSCAN', 'GMM');
-newXticklabel = {[num2str(freq_ratio(1))],[num2str(freq_ratio(2))],[num2str(freq_ratio(3))]};
-set(gca, 'YAxisLocation', 'origin')                                      % Set New Y-Tick Labels
-set(gca,'XtickLabel',newXticklabel);
+newXticklabel = {[num2str(freq_ratio(1))],[num2str(freq_ratio(2))],[num2str(freq_ratio(3))],[num2str(freq_ratio(4))]};
+set(gca, 'xticklabel', newXticklabel)
+if max(max(false_positives.averages+false_positives.std))>max(max(abs(false_negatives.averages+false_negatives.std)))
+    ylim([-max(max(false_positives.averages+false_positives.std))-1 max(max(false_positives.averages+false_positives.std))+1])
+else
+    ylim([-max(max(abs(false_negatives.averages+false_negatives.std)))-1 max(max(abs(false_negatives.averages+false_negatives.std)))+1])
+end   
 xlabel('Ratio specific to non-specific')
 ylabel('Number of false assignments')
 box on
-title(['False assignments - ',num2str(av_binding_spots(m)),' binding spots'])
+title(['False assignments - ',num2str(av_binding_spots(m)),' binding sites'])

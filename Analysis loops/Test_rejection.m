@@ -13,7 +13,7 @@ k=1;
 
 %% Parameters
 rej.outlier_factor=1.5; %outlier rejection for d>d_av+..*sqrt(d_av)
-rej.edge_point_distance=set.ROI.size/2; %points further away than this radius from the center are not considered for DBSCAN
+rej.edge_point_distance=inf; %points further away than this radius from the center are not considered for DBSCAN
 rej.number_gaussians=2; %number of Gaussians fitted within GMM
 
 ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, makePlot, set, ROIs);

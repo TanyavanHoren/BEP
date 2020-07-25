@@ -18,6 +18,7 @@ xlabel('x-position (pixels)')
 xlim([-(set.ROI.size-1)/4 (set.ROI.size-1)/4])
 ylabel('y-position (pixels)')
 ylim([-(set.ROI.size-1)/4 (set.ROI.size-1)/4])
+legend('Outside of ellipse', 'Inside of ellipse')
 box on
 title('Error ellipse')
 end

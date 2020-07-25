@@ -12,7 +12,7 @@ if set.other.fixed_bind_spots==0
 elseif set.other.fixed_bind_spots==1
     ROIs.ROI(i).object_number_bind=set.obj.av_binding_spots;
 end
-while ROIs.ROI(i).object_number_bind == 0 %in reality, we would also exclude objects without events
+while ROIs.ROI(i).object_number_bind == 0 %exclude particles without binding sites
     ROIs.ROI(i).object_number_bind=poissrnd(set.obj.av_binding_spots);
 end
 ROIs.ROI(i).non_specific.period=set.para.freq_ratio*(set.sample.td+set.sample.tb)/ROIs.ROI(i).object_number_bind;

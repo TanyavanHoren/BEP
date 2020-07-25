@@ -43,12 +43,12 @@ hold on
 scatter([ana.ROI(i).loc.cat3_x],[ana.ROI(i).loc.cat3_y], 1, 'm'); %neither
 %draw actual particle shape
 hold on 
-plot_object_binding_spots(ROIs, set, i);
+%plot_object_binding_spots(ROIs, set, i);
 xlabel('x-position (pixels)')
 ylabel('y-position (pixels)')
 xlim([-set.ROI.size/2 set.ROI.size/2])
 ylim([([-set.ROI.size/2 set.ROI.size/2])])
-legend('Label 0', 'Label 1', 'Label 2', 'Label 3')
+legend('Specific', 'Non-specific', 'Both', 'Neither')
 box on
 title('True categories')
 end

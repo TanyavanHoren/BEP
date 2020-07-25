@@ -10,7 +10,7 @@ time_trace_data_non=S.time_trace_data_non;
 time_trace_data_spec=S.time_trace_data_spec;
 
 %% Parameters
-rej.edge_point_distance=set.ROI.size/2; %points further away than this radius from the center are not considered for DBSCAN
+rej.edge_point_distance=inf; %points further away than this radius from the center are not considered for DBSCAN
 rej.dbscan_minPts=S.rej.dbscan_minPts;
 rej.dbscan_eps=S.rej.dbscan_eps;
 

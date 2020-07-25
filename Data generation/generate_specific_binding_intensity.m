@@ -7,7 +7,7 @@ for j=1:ROIs.ROI(i).object_number_bind
         xc=ROIs.ROI(i).site(j).position_x/set.mic.pixelsize;
         yc=ROIs.ROI(i).site(j).position_y/set.mic.pixelsize;
         center = [yc;xc];
-        gauss_data.I_max=poissrnd(ROIs.ROI(i).site(j).intensity_factor); %implementation shot noise
+        gauss_data.I_max=ROIs.ROI(i).site(j).intensity_factor; %implementation shot noise
         frame = generate_frame_with_Gauss(frame, gauss_data, center);
     end
 end
