@@ -1,5 +1,24 @@
 function ana = reject_outliers(ana, i, set, ROIs, makePlot, rej)
+%{
+Perform outlier rejection on the event localizations. 
 
+INPUTS
+-------
+ana: struct containing results from analysis
+i: index of the ROI considered
+set: system settings
+ROIs: settings for the considered ROI specifically
+makePlot: do not make plot (if 0), or do make plot (if 1)
+rej: settings for clustering
+
+OUTPUTS 
+------
+ana: struct containing results from analysis (updated)
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 radial_distance = sqrt([ana.ROI(i).SupResParams.x_coord].^2+[ana.ROI(i).SupResParams.y_coord].^2);
 if set.other.system_choice==1
     ana.outlier.logical = num2cell(radial_distance*set.mic.pixelsize>ones(1,length(ana.ROI(i).SupResParams)).*(rej.outlier_factor*set.obj.av_radius));

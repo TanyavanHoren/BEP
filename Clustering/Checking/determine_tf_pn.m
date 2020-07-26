@@ -1,5 +1,26 @@
 function check = determine_tf_pn(ana, i, k, check)
+%{
+Determine the amount of true positives, false positives, true negatives,
+    and false negatives for the considered ROI. 
 
+INPUTS
+-------
+ana: struct containing the analysis information, such as the classification
+    of each event
+i: index of the ROI that is considered
+k: index of the method that is considered (1:Error ellipse, 2:DBSCAN, 3:GMM)
+check: struct containing the amount of false positives and false negatives
+    for each method
+
+OUTPUTS 
+------
+check: struct containing the amount of false positives and false negatives
+    for each method (updated)
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 %predefine
 true_pos_log=false(1,size(ana.ROI(i).SupResParams,2));
 true_neg_log=false(1,size(ana.ROI(i).SupResParams,2));

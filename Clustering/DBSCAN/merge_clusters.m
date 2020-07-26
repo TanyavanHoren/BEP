@@ -1,5 +1,27 @@
 function ana = merge_clusters(dbscan_var, set, i, ana, makePlot, ROIs)
+%{
+Combine clusters found with DBSCAN into one big cluster. 
 
+INPUTS
+-------
+dbscan_var: intermediate results from DBSCAN analysis
+set: system settings
+i: index of the ROI considered
+ana: struct containing results from analysis, such as the intermediate
+    event classifications
+makePlot: do not make plot (if 0), or do make plot (if 1)
+ROIs: specific settings for ROI i, needed to plot the object geometry and
+    binding site positions
+
+OUTPUTS 
+------
+ana: struct containing results from analysis, with adapted event 
+    classifications
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 %find how many points are identified per cluster 
 [num_per_index_dbscan,indices_dbscan] = groupcounts(dbscan_var.idx);
 grouped_dbscan = [indices_dbscan num_per_index_dbscan];

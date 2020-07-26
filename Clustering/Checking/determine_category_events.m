@@ -1,5 +1,32 @@
 function ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, makePlot, set, ROIs)
+%{
+Classify all events based on the ground truth from data generation.
+%0: specific with certainty: only a specific event was going on
+%1: non-specific with certainty: only a non-specific event was going on
+%2: simultaneous specific and non-specific events: we will reject these from further analysis
+%3: there was no event: something was localized, while no event was going on 
 
+INPUTS
+-------
+ana: struct containing results from analysis
+time_trace_data_non: for each moment in time, the amount of non-specific
+sites active
+time_trace_data_spec: for each moment in time, the amount of specific 
+events occurring
+i: index of considered ROI
+makePlot: is a plot made, yes (1) or no (0)?
+set: system settings
+ROIs: settings for the considered ROI specifically
+
+OUTPUTS 
+------
+ana: struct containing results from analysis, now including the category
+to which each event corresponds. 
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 non_spec_log = int16(zeros(1,size(ana.ROI(i).SupResParams,2)));
 for j=1:size(ana.ROI(i).SupResParams,2)
     event_index = ana.ROI(i).SupResParams(j).event_idx;

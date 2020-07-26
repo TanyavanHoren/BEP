@@ -1,5 +1,22 @@
 function [set, SNR]  = give_inputs(set)
+%{
+Load (many of) the system inputs
 
+INPUTS
+-------
+set: system settings; settings which are varied per measurement, such as
+number of binding sites, number of ROIs, ratio of specific to non-specific
+events
+
+OUTPUTS 
+------
+set: system settings 
+SNR: estimated signal-to-noise ratio
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 set.sample.k_off = 1.6; %s^-1
 set.sample.k_on = 2.3E6; %M^-1s^-1
 set.sample.concentration = set.sample.k_off/(set.sample.k_on*20*set.obj.av_binding_spots); %in M

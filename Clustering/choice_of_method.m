@@ -1,5 +1,27 @@
 function k = choice_of_method(calibration, estimation, set)
+%{
+Select the appropriate clustering method for the considered ROI. 
+    The appropriate method is chosen from the optimization. We use the
+    number of binding sites and the ratio of specific to non-specific events
+    from the estimation. 
 
+INPUTS
+-------
+calibration: struct containing the names of the calibration files that 
+    should be used. In this case method optimization is important.  
+estimation: struct containing the estimation of the number of binding sites
+    and of the ratio of specific to non-specific events
+set: system settings
+
+OUTPUTS 
+------
+k: index of the clustering method that should be used 
+    (1:Error ellipse, 2:DBSCAN, 3:GMM)
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 load(calibration.method);
 %find the closest calibration ratio and binding spot value
 deviations_ratio = abs(optimization_method.options_freq_ratio-estimation.ratio);

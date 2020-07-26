@@ -1,5 +1,25 @@
 function ROIs = generate_non_specific_events(ROIs, set, t, i)
+%{
+Check if new non-specific site becomes active in the frame. If so, the 
+site is created (gets assigned a position, peak intensity, etc.). 
+Furthermore, an intensity factor is calculated for each site. 
 
+INPUTS
+-------
+ROIs: settings for the considered ROI specifically
+set: system settings
+t: current moment in time
+i: index of considered ROI
+
+OUTPUTS 
+------
+ROIs: settings for the considered ROI specifically, in this case mostly 
+non-specific binding properties, such as start times, off-times, etc. 
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 dt = set.mic.dt;
 t_start = ROIs.ROI(i).non_specific.t_start;
 intensity_factor=0;

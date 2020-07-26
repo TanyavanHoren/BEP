@@ -1,4 +1,24 @@
 function minima = Optimize_dbscan_loop(workspaces, minPts, eps)
+%{
+Find the optimal DBSCAN parameters (eps and minPts) for each of the 
+    datasets. This is done by finding the eps and minPts values at which
+    the number of false assignments is minimal (averaged across all ROIs).
+    A heatmap is plotted for each dataset, showing the change in the 
+    amount of false assignments as a function of eps and minPts. 
+
+INPUTS
+-------
+workspaces: filenames of the datasets that will be investigated
+minPts: minPts values that are used in the iterative process
+eps: eps values that are used in the iterative process
+
+OUTPUTS 
+------
+minima: for each dataset, the optimal eps and minPts value, and the 
+    corresponding average amount of false positives
+
+Created by Tanya van Horen - July 2020
+%}
 
 %% Find number of false positives/negatives for each combination of minPts and EPS
 for i=1:size(workspaces,2)
@@ -11,10 +31,11 @@ for i=1:size(workspaces,2)
             for n=1:size(minPts,2) %columns are determined by x-variable
                 S.rej.dbscan_minPts=minPts(n);
                 S.rej.dbscan_eps=eps(m);
-                % Determine false/true positives/negatives
+                % Determine false positives and negatives
                 checks.dataset(i).ROI(l).check = Optimize_dbscan_param(S,0);
                 % Delete empty row corresponding to k=1
                 checks.dataset(i).ROI(l).check( all( cell2mat( arrayfun( @(x) structfun( @isempty, x ), checks.dataset(i).ROI(l).check, 'UniformOutput', false ) ), 1 ) ) = [];
+                % Put information in struct
                 false_pos.dataset(i).ROI(l).dbscan(m,n)=checks.dataset(i).ROI(l).check.false_pos;
                 false_neg.dataset(i).ROI(l).dbscan(m,n)=checks.dataset(i).ROI(l).check.false_neg;
                 false_tot.dataset(i).ROI(l).dbscan(m,n)=(checks.dataset(i).ROI(l).check.false_pos+checks.dataset(i).ROI(l).check.false_neg);

@@ -1,3 +1,21 @@
+%{
+Determine how many ROIs are needed per dataset to minimize variation in 
+the mean number of false positives or negatives, while keeping the data
+generation time at an acceptable level. 
+
+INPUTS
+-------
+none
+
+OUTPUTS (most relevant result)
+------
+Plots of the width of the 95% confidence interval around the mean number
+of false positives/negatives as a function of the sample size (ROI number)
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 clear all
 close all
 clc

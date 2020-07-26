@@ -1,4 +1,20 @@
 function check = Optimize_dbscan_param(S, makePlot)
+%{
+Perform DBSCAN clustering on a single ROI. Check the results at the end. 
+
+INPUTS
+-------
+S: information that was loaded in from the dataset to which the ROI
+    corresponds
+makePlot: do not make plot (if 0), or do make plot (if 1)
+
+OUTPUTS 
+------
+check: struct containing the amount of false positives and false negatives
+    for each method
+
+Created by Tanya van Horen - July 2020
+%}
 
 %% Load data
 ROIs=S.ROIs;

@@ -1,5 +1,27 @@
 function rej = choice_of_dbscan_params(calibration, estimation, set, rej)
+%{
+Select the appropriate eps and minPts values for the considered ROI. 
+    The appropriate values are chosen from the optimization. We use the
+    number of binding sites and the ratio of specific to non-specific events
+    from the estimation. 
 
+INPUTS
+-------
+calibration: struct containing the names of the calibration files that 
+    should be used. In this case only DBSCAN calibration. 
+estimation: struct containing the estimation of the number of binding sites
+    and of the ratio of specific to non-specific events
+set: system settings
+rej: clustering settings (excluding eps and minPts)
+
+OUTPUTS 
+------
+rej: clustering settings (including eps and minPts)
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 load(calibration.dbscan);
 %find the closest calibration ratio and binding spot value
 deviations_ratio = abs(optimization_dbscan.options_freq_ratio-estimation.ratio);

@@ -1,4 +1,31 @@
 function [false_positives, false_negatives, false_overall] = Test_rejection_loop(calibration, makePlot, workspaces, av_binding_spots, freq_ratio, m)
+%{
+Load in datasets. For each dataset, and for each ROI separately, 
+    perform clustering using the three algorithms (error ellipse, DBSCAN,
+    GMM), and save the amount of false positives and negatives.
+    For each dataset, find the average number of false positives and negatives
+    using each of the methods. Find the standard deviation as well.
+    Plot the results in a bar diagram. 
+
+INPUTS
+-------
+calibration: struct containing the names of the calibration files that 
+    should be used. In this case only DBSCAN calibration. 
+makePlot: do not make plot (if 0), or do make plot (if 1)
+workspaces: filenames of the datasets that should be used
+av_binding_spots: average binding site numbers tested
+freq_ratio: ratios of specific to non-specific events tested
+m: index of the average binding site number considered (we analyze datasets
+    grouped on the average number of binding sites)
+
+OUTPUTS 
+------
+false_positives: struct containing information on the false positives
+false_negatives: struct containing information on the false negatives
+false_overall: struct containing information on the false positives+negatives
+
+Created by Tanya van Horen - July 2020
+%}
 
 %% Determine false/true positives/negatives
 for i=1:size(workspaces,2)

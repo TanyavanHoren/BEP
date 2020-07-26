@@ -1,5 +1,28 @@
 function scatter_plot_Nbind = create_scatter_plot_Nbind(workspaces, Ndet_binding_spots, Ndet_freq_ratio, m, Ndet, plotcolours)
+%{
+Create a scatter plot that shows the improvement in binding site quantification
+for different binding site numbers and ratios of specific to non-specific
+events. 
 
+INPUTS
+-------
+workspaces: filenames of which the results are plotted in this step of the
+    for-loop. 
+Ndet_binding_spots: binding site numbers tested
+Ndet_freq_ratio: ratios of specific to non-specific events tested
+m: index of the number of binding sites of the data that is plotted
+    in this step of the for-loop
+plotcolours: colours used in the scatter plot (per fixed number of 
+    binding sites)
+
+OUTPUTS 
+------
+scatter plot
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 N_determined=zeros(1,size(workspaces,2));
 N_determined_std=zeros(1,size(workspaces,2));
 for i=1:size(workspaces,2) %loop over different ratios

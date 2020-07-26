@@ -1,5 +1,23 @@
 function [ana, i, ROIs, set, time_trace_data, time_trace_data_non, time_trace_data_spec] = Generate_datasets(S)
+%{
+Simulate DNA-PAINT microscope movies for individual ROIs with particle's 
+at their centers 
 
+INPUTS
+-------
+none
+
+OUTPUTS (most relevant ones)
+------
+time_trace_data.ROI(i).frame(:): intensity time trace
+frame_data.ROI(i).frame(:): microscope movie frames
+ana.ROI(i).timetrace_data: struct with information on intensity time trace
+ana.ROI(i).SupResParams: struct with information on event localizations
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 folder = fileparts(which('main.m'));
 addpath(genpath(folder)); %add folder to path
 try

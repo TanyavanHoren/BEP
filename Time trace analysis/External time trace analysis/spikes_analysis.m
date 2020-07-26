@@ -1,5 +1,24 @@
-function [ params ] = spikes_analysis(time_axis, signal, set, frames)
+function params = spikes_analysis(time_axis, signal, set, frames)
+%{
+Analyze the intensity time trace. Extract among others the bright and
+dark times. 
 
+INPUTS
+-------
+time_axis: all time steps in the experiment
+signal: intensity time trace
+set: system settings
+frames: frames that make up the microscope movie
+
+OUTPUTS 
+------
+params: all information extracted from the intensity time trace
+
+Edited by Tanya van Horen, received from Yuyang Wang, creator unknown
+ - July 2020
+%}
+
+%%
 %% initialize results
 params = struct(); 
 params.time_axis = time_axis;

@@ -1,4 +1,26 @@
 function [estimation, check] = Test_rejection(calibration, S, makePlot)
+%{
+Perform clustering on the event localizations of the ROI 
+    using the three algorithms (error ellipse, DBSCAN,
+    GMM), and save the amount of false positives and negatives.
+
+INPUTS
+-------
+calibration:  struct containing the names of the calibration files that 
+    should be used. In this case only DBSCAN calibration. 
+S: information that was loaded in from the dataset to which the ROI
+    corresponds
+makePlot: do not make plot (if 0), or do make plot (if 1)
+
+OUTPUTS 
+------
+estimation: struct containing the estimation of the number of binding sites
+    and of the ratio of specific to non-specific events
+check: struct containing the amount of false positives and false negatives
+    for each method
+
+Created by Tanya van Horen - July 2020
+%}
 
 %% Load data
 ROIs=S.ROIs;

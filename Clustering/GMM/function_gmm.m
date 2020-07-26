@@ -1,5 +1,24 @@
 function gmm_var = function_gmm(ana, set, ROIs, i, makePlot, rej)
+%{
+Perform clustering of the event localizations using GMM. 
 
+INPUTS
+-------
+ana: struct containing results from analysis
+ROIs: settings for the considered ROI specifically
+set: system settings
+i: index of considered ROI
+makePlot: do not make plot (if 0), or do make plot (if 1)
+rej: settings for clustering (in this case the number of Gaussians fitted)
+
+OUTPUTS 
+------
+gmm_var: intermediate results from GMM analysis
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 mean_matrix=zeros(rej.number_gaussians,2);
 if set.other.system_choice == 1
     sigma_matrix(:,:,1)=[set.obj.av_radius/set.mic.pixelsize 0; 0 set.obj.av_radius/set.mic.pixelsize];

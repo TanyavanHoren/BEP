@@ -1,3 +1,22 @@
+%{
+Simulate DNA-PAINT microscope movies for individual ROIs with particle's 
+at their centers 
+
+INPUTS
+-------
+none
+
+OUTPUTS (most relevant ones)
+------
+time_trace_data.ROI(i).frame(:): intensity time trace
+frame_data.ROI(i).frame(:): microscope movie frames
+ana.ROI(i).timetrace_data: struct with information on intensity time trace
+ana.ROI(i).SupResParams: struct with information on event localizations
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 clear all
 close all
 clc
@@ -60,9 +79,9 @@ disp("Generate ROIs done" + newline + "Time taken: " + num2str(t_end) + " second
 %% Data generation
 tic;
 for i=1:set.ROI.number
-    frame_data.ROI(i).frame = uint16(normrnd(set.bg.mu,set.bg.std,[set.ROI.size,set.ROI.size,set.mic.frames]));
+    frame_data.ROI(i).frame = uint16(normrnd(set.bg.mu,set.bg.std,[set.ROI.size,set.ROI.size,set.mic.frames])); %generate stack of background frames
     for t = time_axis
-        frame = frame_data.ROI(i).frame(:,:,n_frame(i));
+        frame = frame_data.ROI(i).frame(:,:,n_frame(i)); %select background frame from stack
         ROIs = generate_binding_events(ROIs, set, t, i);
         frame = generate_specific_binding_intensity(ROIs, set, frame, i);
         time_trace_data_spec.ROI(i).frame(n_frame(i)) = create_spec_tt(ROIs, i);
@@ -72,17 +91,17 @@ for i=1:set.ROI.number
         ROIs = delete_old_non_specific_events(ROIs, t, i);
         if set.other.timetrace_on ==1
             if n_frame(i) == 1
-                time_trace_data.ROI(i).frame = zeros([1, set.mic.frames]);
+                time_trace_data.ROI(i).frame = zeros([1, set.mic.frames]); %initialize
             end
-            time_trace_data.ROI(i).frame(n_frame(i)) = sum(frame, 'all');
+            time_trace_data.ROI(i).frame(n_frame(i)) = sum(frame, 'all'); %create time trace segment
         end
-        frame_data.ROI(i).frame(:,:,n_frame(i))=frame;
+        frame_data.ROI(i).frame(:,:,n_frame(i))=frame; %save frame
         if mod(n_frame(i),set.other.visFreq) == 0
-            imagesc([1:size(frame,2)], [1:size(frame,1)], frame, set.other.clims);
+            imagesc([1:size(frame,2)], [1:size(frame,1)], frame, set.other.clims); %visualize a frame
             title(["Frame: " num2str(n_frame(i)), "ROI: " num2str(i)])
-            pause(0.050)
+            pause(0.001)
         end
-        n_frame(i)=n_frame(i)+1;
+        n_frame(i)=n_frame(i)+1; %go to next step in time
     end
 end
 t_end = toc;
@@ -107,14 +126,6 @@ if set.other.loc_analysis == 1
         merged_frame_data = merge_events(ana,i,frame_data);
         ana.ROI(i).SupResParams = merge_Matej_inspired_fitting_by_Dion(merged_frame_data.ROI(i).frame, set, i, ana);
         ana = position_correction(ana, set, i);
-        figure
-        scatter([ana.ROI(i).SupResParams.x_coord], [ana.ROI(i).SupResParams.y_coord],1);
-        xlabel('x-position (pixels)')
-        ylabel('y-position (pixels)')
-        xlim([-set.ROI.size/2 set.ROI.size/2])
-        ylim([([-set.ROI.size/2 set.ROI.size/2])])
-        box on
-        title('Event localizations')
         ana = determine_category_events(ana, time_trace_data_non, time_trace_data_spec, i, 1, set, ROIs);
     end
     t_end = toc;

@@ -1,4 +1,26 @@
 function ana = Nbind_rejection(calibration, S, makePlot)
+%{
+Perform clustering on the event localizations of the ROI 
+    using the optimal clustering algorithm (error ellipse, DBSCAN,
+    or GMM). (Try to) identify non-specific events. Correct for the 
+    contributions of non-specific events in the bright and dark time sequences.
+    Quantify the binding sites after correction. 
+
+INPUTS
+-------
+calibration:  struct containing the names of the calibration files that 
+    should be used. In this case DBSCAN and method calibration. 
+S: information that was loaded in from the dataset to which the ROI
+    corresponds
+makePlot: do not make plot (if 0), or do make plot (if 1)
+
+OUTPUTS 
+------
+ana: struct containing results from analysis, including the binding site
+    number determined after correction
+
+Created by Tanya van Horen - July 2020
+%}
 
 %% Load data
 ROIs=S.ROIs;

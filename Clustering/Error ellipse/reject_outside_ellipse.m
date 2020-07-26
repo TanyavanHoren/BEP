@@ -1,5 +1,27 @@
 function ana = reject_outside_ellipse(ana,i, set, ROIs, makePlot)
+%{
+Fit an error ellipse to the event localizations (that were determined
+    to be inliers). Distinguish between event localizations inside and 
+    outside the error ellipse. 
 
+INPUTS
+-------
+ana: struct containing results from analysis, such as the intermediate
+    event classifications
+i: index of considered ROI
+set: system settings
+ROIs: settings specific to considered ROI
+makePlot: do not make plot (if 0), or do make plot (if 1)
+
+OUTPUTS 
+------
+ana: struct containing results from analysis, such as the 
+    event classifications
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 %fit error ellipse to specified points
 [~,r_ellipse] = error_elipse(ana, i);
 %make list with points outside the ellipse

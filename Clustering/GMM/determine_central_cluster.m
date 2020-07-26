@@ -1,9 +1,31 @@
 function ana = determine_central_cluster(ana, gmm_var, i, makePlot, ROIs, set)
+%{
+Distinguish the specific event cluster (central cluster) from the 
+    non-specific event cluster
+
+INPUTS
+-------
+ana: struct containing results from analysis
+gmm_var: intermediate results from GMM analysis
+i: index of considered ROI
+makePlot: do not make plot (if 0), or do make plot (if 1)
+ROIs: settings for the considered ROI specifically
+set: system settings
+
+OUTPUTS 
+------
+ana: struct containing results from analysis
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 %predefine
 x_1=0; 
 counter_1=0;
 x_2=0;
 counter_2=0;
+
 %determine the average absolute x-position of both clusters 
 for l=1:size(gmm_var.idx,1)
     if gmm_var.idx(l) == 1
@@ -14,6 +36,7 @@ for l=1:size(gmm_var.idx,1)
         counter_2=counter_2+1;
     end
 end
+
 x_1_norm=x_1/counter_1; %average abs(x) of cluster 1
 x_2_norm=x_2/counter_2; %average abs(x) of cluster 2
 if x_1_norm>x_2_norm %the 'right' cluster is the one in the center

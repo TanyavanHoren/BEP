@@ -1,5 +1,21 @@
-function time_traces = generate_time_traces(time_trace_data, set, params)
+function time_trace = plot_time_traces(time_trace_data, set, params)
+%{
+Plot the full time trace, and a segment of the time trace (zoom-in).
 
+INPUTS
+-------
+time_trace_data: contains the intensity time trace for each ROI
+set: system settings
+params: all information extracted from the time trace
+
+OUTPUTS 
+------
+none
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 for i=1:set.ROI.number
     %full timetrace
     figure

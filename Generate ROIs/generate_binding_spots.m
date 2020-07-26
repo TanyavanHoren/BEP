@@ -1,5 +1,23 @@
 function ROIs = generate_binding_spots(ROIs, set, i)
+%{
+Determine binding site positions, initiate parameters binding sites,
+determine first switch time (between states) for each site. 
 
+INPUTS
+-------
+ROIs: dimensions and orientation of the particle, number of binding sites
+on the particle
+set: system settings (circular or rectangular particles)
+i: index of the ROI considered
+
+OUTPUTS 
+------
+ROIs: properties of each binding site 
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 if set.other.system_choice ==1
     for j=1:ROIs.ROI(i).object_number_bind
         r=sqrt(rand())*ROIs.ROI(i).object_radius;

@@ -1,5 +1,25 @@
 function ana = reject_bright_dark(ana, i, k)
+%{
+Reject the bright times corresponding to events that were classified as
+    non-specific, merge the surrounding dark times. 
 
+INPUTS
+-------
+ana: struct containing results from analysis, such as the 
+    event classifications
+i: index of the considered ROI
+k: index of the clustering algorithm that was used (1: Error ellipse fitting,
+    2: DBSCAN, 3: GMM)
+
+OUTPUTS 
+------
+ana: struct containing results from analysis, now including a corrected
+    bright and dark time sequence
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 if ana.ROI(i).timetrace_data.labeledOns(1)==0
     begin_bright=0; %at the beginning, we have a dark time
 else

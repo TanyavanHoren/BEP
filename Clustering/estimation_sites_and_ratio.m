@@ -1,5 +1,25 @@
 function estimation=estimation_sites_and_ratio(ana,set,i,rej)
+%{
+Provide an estimation of the number of binding sites in the ROI and its 
+    ratio of specific to non-specific events. 
 
+INPUTS
+-------
+ana: struct containing results from analysis
+set: system settings
+i: index of the ROI considered
+rej: settings for clustering, in this case the factor that indicates from
+    which distance a point is considered to be an outlier
+
+OUTPUTS 
+------
+estimation: struct containing the estimation of the number of binding sites
+    and of the ratio of specific to non-specific events
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
 radial_distance = sqrt([ana.ROI(i).SupResParams.x_coord].^2+[ana.ROI(i).SupResParams.y_coord].^2);
 if set.other.system_choice==1
     estimation.number_spec_events = sum(radial_distance*set.mic.pixelsize<ones(1,length(ana.ROI(i).SupResParams)).*(rej.outlier_factor*set.obj.av_radius));
