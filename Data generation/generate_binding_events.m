@@ -1,5 +1,28 @@
 function ROIs = generate_binding_events(ROIs, set, t, i)
+%{
+For each site, adapt switch time if an event takes place in the frame,
+keep isBound (state) up to date, determine the fraction of the frame in 
+which a binding event took place, determine the intensity of a new 
+event if necessary.
 
+INPUTS
+-------
+ROIs: settings for the considered ROI specifically
+set: system settings
+t: current moment in time
+i: index of considered ROI
+
+OUTPUTS 
+------
+ROIs: settings for the considered ROI specifically, in this case mostly 
+specific binding site properties, such as switch times, isBound values,
+event intensities. 
+
+Created by Tanya van Horen - July 2020
+%}
+
+
+%%
 dt = set.mic.dt;
 
 for j=1:ROIs.ROI(i).object_number_bind

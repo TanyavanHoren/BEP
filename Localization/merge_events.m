@@ -1,26 +1,26 @@
-function ana = merge_events(set,ana,i,frame_data)
+function merged_frame_data = merge_events(ana,i,frame_data)
+%{
+Sum all frames corresponding to a single bright time (such that a single
+localization can be performed per event). 
 
-indices = zeros(1,set.mic.frames);
-for j=1:set.mic.frames
-    indices(1,j)=j;
+INPUTS
+-------
+ana: struct containing results from analysis. In this case, time trace 
+analysis results are needed to find the frames that correspond to the same 
+bright time. 
+i: index of the ROI considered
+frame_data: struct containing all frames
+
+OUTPUTS 
+------
+merged_frame_data: summed frames 
+
+Created by Tanya van Horen - July 2020
+%}
+
+%%
+for j=1:size(ana.ROI(i).timetrace_data.ontime,2)
+    logical = ana.ROI(i).timetrace_data.labeledOns==j;
+    merged_frame_data.ROI(i).frame(:,:,j)=sum(frame_data.ROI(i).frame(:,:,logical),3);
 end
-end_tracker = [];
-begin_tracker = [];
-dark_indices = indices(ana.ROI(i).timetrace_data.labeledOns==0);
-for j=2:size(dark_indices,2)
-    if dark_indices(j)-dark_indices(j-1)>1.5
-        end_frame = dark_indices(j)-1;
-        begin_frame = dark_indices(j-1)+1;
-        event_length = end_frame - begin_frame + 1;
-        end_tracker = [end_tracker end_frame];
-        begin_tracker = [begin_tracker begin_frame];
-        frames_merged = uint16(zeros(set.ROI.size,set.ROI.size));
-        if end_frame == begin_frame
-            frames_merged(:,:) = frames_merged(:,:) + frame_data.ROI(i).frame(:,:,begin_frame); % right
-        else
-            for k = begin_frame:1:end_frame
-                frames_merged(:,:) = frames_merged(:,:) + frame_data.ROI(i).frame(:,:,k); % right
-            end
-        end
-    end
 end
