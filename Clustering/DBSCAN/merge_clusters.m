@@ -58,7 +58,7 @@ if makePlot == 1
     xlim([-(set.ROI.size-1)/4 (set.ROI.size-1)/4])
     ylabel('y-position (pixels)')
     ylim([-(set.ROI.size-1)/4 (set.ROI.size-1)/4])
-    legend('Part of merged cluster', 'Not a part of merged cluster')
+    legend('Not a part of merged cluster', 'Part of merged cluster')
     box on
     title('DBSCAN merging clusters')
 end

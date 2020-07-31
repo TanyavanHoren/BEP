@@ -51,7 +51,7 @@ set.other.visFreq = 500; %visualization made every # frames
 %ROI; ROI(i): general, obj=object, sites, frames 
 set.ROI.number = 1; % ROIs or objects
 set.obj.av_binding_spots = 20; % per object
-set.para.freq_ratio = 0.5; %ratio f_specific/f_non_specific
+set.para.freq_ratio = inf; %ratio f_specific/f_non_specific
 set.other.fixed_bind_spots = 0; %fix or not
 [set, SNR] = give_inputs(set); %other inputs
 
@@ -99,6 +99,8 @@ for i=1:set.ROI.number
         if mod(n_frame(i),set.other.visFreq) == 0
             imagesc([1:size(frame,2)], [1:size(frame,1)], frame, set.other.clims); %visualize a frame
             title(["Frame: " num2str(n_frame(i)), "ROI: " num2str(i)])
+            xlabel('Column index')
+            ylabel('Row index')
             pause(0.001)
         end
         n_frame(i)=n_frame(i)+1; %go to next step in time
